@@ -1,7 +1,10 @@
-import java.io.*;
+package com.mycorp.app;
 import javax.servlet.*;
+import javax.servlet.http.HttpServlet;
 
-public class TestServlet extends GenericServlet {
+import java.io.*;
+
+public class TestServlet extends HttpServlet {
     public void service(ServletRequest request,ServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter pw = response.getWriter();
