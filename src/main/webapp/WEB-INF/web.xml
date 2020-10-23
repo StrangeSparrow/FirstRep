@@ -3,13 +3,13 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-    <display-name>Archetype Created Web Application</display-name>
+    <display-name>Hot News</display-name>
     <servlet>
-        <servlet-name>simpleServlet</servlet-name>
+        <servlet-name>News</servlet-name>
         <servlet-class>com.mycorp.app.TestServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>simpleServlet</servlet-name>
+        <servlet-name>News</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>
