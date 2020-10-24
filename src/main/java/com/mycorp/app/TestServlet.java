@@ -1,5 +1,6 @@
 package com.mycorp.app;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -15,9 +16,15 @@ public class TestServlet extends HttpServlet {
         ListNews listNews = new ListNews();
         listNews.fillFromFile("webapps\\my-app-1.0-SNAPSHOT\\WEB-INF\\classes\\news.csv");
 
-        for(News news : listNews.getNewsList()) {
-            pw.println(news.creatForWeb());
-        }
+
+        request.setAttribute("list", listNews);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("news.jsp");
+        requestDispatcher.forward(request, response);
+
+//        for(News news : listNews.getNewsList()) {
+//            pw.println(news.creatForWeb());
+//        }
 
         pw.close();
     }
