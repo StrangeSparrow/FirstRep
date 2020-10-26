@@ -1,7 +1,5 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.mycorp.app.News" %>
-<%@ page import="com.mycorp.app.ListNews" %>
-
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -13,9 +11,9 @@
 <body>
 
 <%
-    ListNews listNews = (ListNews)request.getAttribute("list");
+    List<News> listNews = (List<News>)request.getAttribute("list");
 
-    for (News news : listNews.getNewsList()) {
+    for (News news : listNews) {
          out.println("<h2>" + news.getHead() + "</h2>");
         out.println("<i>" + news.getBriefly() + "</i><p>");
         out.println(news.getFull());

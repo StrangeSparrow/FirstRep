@@ -1,5 +1,12 @@
 package com.mycorp.app;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class News {
     private String head;
     private String briefly;
@@ -35,12 +42,4 @@ public class News {
         this.full = full;
     }
 
-    //Формирует готовую строку для отображения в WEB
-    public String creatForWeb() {
-        String web = String.format("<h3>%s</h3>" +
-                "<i>%s</i><p>" +
-                "%s", head, briefly, full);
-
-        return web;
-    }
 }

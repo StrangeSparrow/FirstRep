@@ -1,39 +1,35 @@
 package com.mycorp.app;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ListNews {
-    private List<News> newsList;
-    private File source;
-
-    public ListNews() {
-        newsList = new ArrayList<>();
-    }
-
-    public List<News> getNewsList() {
-        return newsList;
-    }
+public class ListNews implements NewsService{
 
     //В этой функции заполняем список новостей из источника
-    public void fillFromFile(String file) throws FileNotFoundException {
-        source = new File(file);
-        Scanner scanner = new Scanner(source, "UTF-8");
-        scanner.useDelimiter("!!!");
+    public List<News> fetchNews(String filePath) {
+        List<News> newsList = new ArrayList<>();
 
-        String [] data;               //Массив в который мы будем получать данные из источника и сразу разделять на составляющие по разделителю ';'
-        News news;                    //В эту переменную будем заносить наши данные и добавлять её к нашему списку
+        try (Scanner scanner = new Scanner(new FileInputStream(filePath), StandardCharsets.UTF_8)) {
+            scanner.useDelimiter("!!!");
 
-        while (scanner.hasNext()) {
-            String s = scanner.next();
-            data = s.split(";");
-            news = new News(data[0], data[1], data[2]);
-            newsList.add(news);
+            while (scanner.hasNext()) {
+                String[] data;               //Массив в который мы будем получать данные из источника и сразу разделять на составляющие по разделителю ';'
+                News news;
+                String s = scanner.next();
+                data = s.split(";");
+                news = new News(data[0], data[1], data[2]);
+                newsList.add(news);
+            }
+        } catch (IOException e) {
+            System.out.println("Error " + e);
         }
 
-        scanner.close();
+        if (!newsList.isEmpty())
+            return newsList;
+        return null;
     }
 }
