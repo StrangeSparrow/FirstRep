@@ -28,7 +28,7 @@ public class Config {
         String getParam () { return param; }
     }
 
-    private Config() {};
+    private Config() {}
 
     public static Config getInstance() {
         return INSTANCE;
@@ -48,10 +48,7 @@ public class Config {
 
     public boolean isOnlyHeaders() {
         String result = getParam(Parameters.ONLY_HEADERS.getParam());
-        if (result == null || ! result.equals("true"))
-            return false;
-
-        return true;
+        return result != null && result.equals("true");
     }
 
     private String getParam(String param) {
@@ -60,8 +57,8 @@ public class Config {
 
         String result = null;
 
-//        try (Scanner scanner = new Scanner(new FileInputStream("webapps/my-app-3.0-SNAPSHOT/WEB-INF/classes/application.properties"))) {
-        try (Scanner scanner = new Scanner(new FileInputStream("src/main/resources/application.properties"))) {
+        try (Scanner scanner = new Scanner(new FileInputStream("webapps/my-app-3.5-SNAPSHOT/WEB-INF/classes/application.properties"))) {
+//        try (Scanner scanner = new Scanner(new FileInputStream("src/main/resources/application.properties"))) {
             Pattern pattern = Pattern.compile("^" + param + ".\\S*");
             Matcher matcher;
             while (scanner.hasNext()) {
