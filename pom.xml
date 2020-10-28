@@ -4,11 +4,7 @@
 
     <groupId>com.mycorp.app</groupId>
     <artifactId>my-app</artifactId>
-<<<<<<< Updated upstream
-    <version>1.0-SNAPSHOT</version>
-=======
     <version>3.0-SNAPSHOT</version>
->>>>>>> Stashed changes
     <packaging>war</packaging>
 
     <properties>
