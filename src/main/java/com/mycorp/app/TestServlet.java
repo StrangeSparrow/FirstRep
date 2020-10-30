@@ -11,10 +11,11 @@ import java.util.List;
 
 public class TestServlet extends HttpServlet {
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType(Constants.CONTENT_TYPE);
         PrintWriter pw = response.getWriter();
 
-        List<News> listNews = new NewsServiceImpl().fetchNews("webapps/my-app-2.0-SNAPSHOT/WEB-INF/classes/news.csv");
+        NewsServiceImpl newsService = new NewsServiceImpl();
+        List<News> listNews = newsService.fetchNews(Config.getInstance().getNewsPath());
 
         request.setAttribute("list", listNews);
 

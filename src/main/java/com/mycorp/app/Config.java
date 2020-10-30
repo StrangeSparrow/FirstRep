@@ -5,13 +5,14 @@ import org.apache.log4j.Logger;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Config {
-    private final HashMap<String, String> loadedParams = new HashMap<>();
-    private static final Config INSTANCE = new Config();
+    private final Map<String, String> loadedParams = new HashMap<>();
+    private static final Config Instance = new Config();
     private final static Logger logger = Logger.getLogger(Config.class);
 
     public enum Parameters {
@@ -31,7 +32,7 @@ public class Config {
     private Config() {}
 
     public static Config getInstance() {
-        return INSTANCE;
+        return Instance;
     }
 
     public String getNewsPath() {
