@@ -12,7 +12,10 @@
 
 <%
     List<News> listNews = (List<News>)request.getAttribute("list");
+<<<<<<< HEAD
 
+=======
+>>>>>>> Conf-and-Log
     for (News news : listNews) {
          out.println("<h2>" + news.getHead() + "</h2>");
         out.println("<i>" + news.getBriefly() + "</i><p>");
