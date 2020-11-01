@@ -3,5 +3,6 @@ TestServlet.iml
 out
 target
 /.idea/uiDesigner.xml
-src/main/java/Configurasion
+src/main/java/Configuration.java
+src/main/java/Configuration
 TestServlet.iml
