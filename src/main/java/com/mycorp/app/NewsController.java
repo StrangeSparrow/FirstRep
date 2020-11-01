@@ -33,8 +33,6 @@ public class NewsController {
         String result = Constants.HTML_UP + "<h2>" + news.getHead() + "</h2>\n"
                 + "<i>" + news.getBriefly() + "</i><p>\n"
                 + news.getFull() + Constants.HTML_DOWN;
-        byte [] data = result.getBytes("UTF-8");
-        result = new String(data, "UTF-8");
 
         return result;
     }
