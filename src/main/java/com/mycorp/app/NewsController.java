@@ -6,7 +6,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Path("/")
@@ -21,7 +20,7 @@ public class NewsController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.TEXT_HTML)
-    public String getNews(@PathParam("id") int id) throws UnsupportedEncodingException {
+    public String getNews(@PathParam("id") int id) {
         NewsServiceImpl newsService = new NewsServiceImpl();
         List<News> listNews = newsService.fetchNews(Config.getInstance().getNewsPath());
 
