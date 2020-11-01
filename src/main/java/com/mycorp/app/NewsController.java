@@ -30,9 +30,9 @@ public class NewsController {
 
         News news = listNews.get(id);
 
-        String result = "<h2>" + news.getHead() + "</h2>\n"
+        String result = Constants.HTML_UP + "<h2>" + news.getHead() + "</h2>\n"
                 + "<i>" + news.getBriefly() + "</i><p>\n"
-                + news.getFull();
+                + news.getFull() + Constants.HTML_DOWN;
         byte [] data = result.getBytes("UTF-8");
         result = new String(data, "UTF-8");
 
