@@ -3,6 +3,7 @@ package com.mycorp.app;
 import org.apache.log4j.Logger;
 
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class Config {
         PAGE_SIZE("news.page_size"),
         ONLY_HEADERS("news.list.only_headers");
 
-        String param;
+        private final String param;
 
         Parameters (String param) {
             this.param = param;
@@ -58,7 +59,7 @@ public class Config {
 
         String result = null;
 
-        try (Scanner scanner = new Scanner(new FileInputStream("webapps/my-app-3.5-SNAPSHOT/WEB-INF/classes/application.properties"))) {
+        try (Scanner scanner = new Scanner(new FileInputStream("webapps/my-app-3.5/WEB-INF/classes/application.properties"))) {
 //        try (Scanner scanner = new Scanner(new FileInputStream("src/main/resources/application.properties"))) {
             Pattern pattern = Pattern.compile("^" + param + ".\\S*");
             Matcher matcher;

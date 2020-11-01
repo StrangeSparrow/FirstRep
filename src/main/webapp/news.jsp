@@ -12,10 +12,14 @@
 
 <%
     List<News> listNews = (List<News>)request.getAttribute("list");
-    for (News news : listNews) {
-         out.println("<h2>" + news.getHead() + "</h2>");
-        out.println("<i>" + news.getBriefly() + "</i><p>");
-        out.println(news.getFull());
+
+    for (int i = 0; i < listNews.size(); i++) {
+
+         out.println("<h2>" + listNews.get(i).getHead() + "</h2>");
+        out.println("<i>" + listNews.get(i).getBriefly() + "</i><p>");
+        out.println("<form>" +
+        "<input type=\"button\" value=\"Кнопка\" onClick=\'location.href=\"news/" + i + "\"\'>" +
+        "</form>");
     }
 %>
 
