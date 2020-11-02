@@ -6,3 +6,4 @@ target
 src/main/java/Configuration.java
 src/main/java/Configuration
 TestServlet.iml
+src/main/java/com/mycorp/app/TestApp.java
