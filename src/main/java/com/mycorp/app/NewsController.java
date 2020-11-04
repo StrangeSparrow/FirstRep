@@ -1,5 +1,7 @@
 package com.mycorp.app;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +17,12 @@ import java.util.List;
 
 @Path("/")
 public class NewsController {
+    NewsService newsService = new NewsServiceImpl();
+    private final static Logger logger = Logger.getLogger(NewsController.class);
+
     @GET
     @Produces(MediaType.TEXT_HTML)
     public void allNews(@Context HttpServletResponse response, @Context HttpServletRequest request) throws ServletException, IOException {
-        NewsServiceImpl newsService = new NewsServiceImpl();
         List<News> listNews = newsService.fetchNews(Config.getInstance().getNewsPath());
 
         request.setAttribute("list", listNews);
@@ -33,8 +37,10 @@ public class NewsController {
     public void getNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
         List<News> listNews = new NewsServiceImpl().fetchNews(Config.getInstance().getNewsPath());
 
-        if (listNews.size() < id)
+        if (listNews.size() < id) {
+            logger.error("Запрос несуществующей новости по id:" + id);
             throw new IllegalArgumentException();
+        }
 
         News news = listNews.get(id);
         request.setAttribute("news", news);
