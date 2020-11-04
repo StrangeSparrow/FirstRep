@@ -23,7 +23,7 @@ public class NewsController {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public void allNews(@Context HttpServletResponse response, @Context HttpServletRequest request) throws ServletException, IOException {
-        List<News> listNews = newsService.fetchNews(Config.getInstance().getNewsPath());
+        List<News> listNews = newsService.fetchNews();
 
         request.setAttribute("list", listNews);
 
@@ -35,7 +35,7 @@ public class NewsController {
     @Path("/{id}")
     @Produces(MediaType.TEXT_HTML)
     public void getNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
-        List<News> listNews = new NewsServiceImpl().fetchNews(Config.getInstance().getNewsPath());
+        List<News> listNews = new NewsServiceImpl().fetchNews();
 
         if (listNews.size() < id) {
             logger.error("Запрос несуществующей новости по id:" + id);
