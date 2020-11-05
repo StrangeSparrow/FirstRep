@@ -5,3 +5,4 @@ target
 /.idea/uiDesigner.xml
 TestServlet.iml
 src/main/java/com/mycorp/app/TestApp.java
+/my-app.iml
