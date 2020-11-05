@@ -22,6 +22,7 @@ import java.util.List;
 public class NewsController {
     private final static Logger logger = Logger.getLogger(NewsController.class);
     NewsService newsService = new NewsServiceImpl();
+    Paginator<News> newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(2).build();
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -52,11 +53,9 @@ public class NewsController {
     @Path("/page/{id}")
     @Produces(MediaType.TEXT_HTML)
     public void newsOnPage(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
-        List<News> listNews = newsService.fetchNews();
+        newsPaginator.setCurrentPage(id);
 
-        List<News> pageNews = UtilNews.getNewsOnPage(listNews, id, 3);
-
-        request.setAttribute("list", pageNews);
+        request.setAttribute("list", newsPaginator);
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/news.jsp");
         requestDispatcher.forward(request, response);
