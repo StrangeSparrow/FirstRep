@@ -1,7 +1,13 @@
 package com.mycorp.app;
 
+import java.util.List;
+
 public class TestApp {
     public static void main(String[] args) {
-        System.out.println(Config.getInstance().getPageSize());
+        List<News> listNews = new NewsServiceImpl().fetchNews();
+        UtilNews.getNewsOnPage(listNews, 1, 1);
+
+        System.out.println(UtilNews.getTotalPages());
+        System.out.println(UtilNews.getCurrentPage());
     }
 }
