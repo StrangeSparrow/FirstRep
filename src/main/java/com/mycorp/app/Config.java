@@ -2,8 +2,6 @@ package com.mycorp.app;
 
 import org.apache.log4j.Logger;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -16,11 +14,11 @@ public class Config {
     private final static Logger logger = Logger.getLogger(Config.class);
 
     public enum Parameters {
-        NEWS_PATH("news.path"),
         PAGE_SIZE("news.page_size"),
-        ONLY_HEADERS("news.list.only_headers");
+        ONLY_HEADERS("news.list.only_headers"),
+        NEWS_FILENAME("news.file_name");
 
-        String param;
+        private final String param;
 
         Parameters (String param) {
             this.param = param;
@@ -35,8 +33,8 @@ public class Config {
         return Instance;
     }
 
-    public String getNewsPath() {
-        return getParam(Parameters.NEWS_PATH.getParam());
+    public String getNewsFileName() {
+        return getParam(Parameters.NEWS_FILENAME.getParam());
     }
 
     public int getPageSize() {
@@ -58,8 +56,7 @@ public class Config {
 
         String result = null;
 
-        try (Scanner scanner = new Scanner(new FileInputStream("webapps/my-app-3.5-SNAPSHOT/WEB-INF/classes/application.properties"))) {
-//        try (Scanner scanner = new Scanner(new FileInputStream("src/main/resources/application.properties"))) {
+        try (Scanner scanner = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties"))) {
             Pattern pattern = Pattern.compile("^" + param + ".\\S*");
             Matcher matcher;
             while (scanner.hasNext()) {
@@ -70,8 +67,6 @@ public class Config {
                     return result;
                 }
             }
-        } catch (IOException e) {
-            logger.error(e.getMessage());
         }
         return result;
     }

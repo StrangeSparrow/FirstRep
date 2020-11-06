@@ -3,13 +3,32 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-    <display-name>Hot News</display-name>
+    <display-name>Archetype Created Web Application</display-name>
     <servlet>
-        <servlet-name>News</servlet-name>
+        <servlet-name>SimpleServlet</servlet-name>
         <servlet-class>com.mycorp.app.TestServlet</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>NewsRest</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>com.mycorp.app</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.scanning.recursive</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>News</servlet-name>
+        <servlet-name>NewsRest</servlet-name>
+        <url-pattern>/news/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SimpleServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>
