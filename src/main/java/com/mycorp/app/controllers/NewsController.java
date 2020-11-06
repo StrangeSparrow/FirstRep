@@ -1,5 +1,6 @@
-package com.mycorp.app;
+package com.mycorp.app.controllers;
 
+import com.mycorp.app.*;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -16,13 +17,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
 @Path("/")
 public class NewsController {
     private final static Logger logger = Logger.getLogger(NewsController.class);
     NewsService newsService = new NewsServiceImpl();
-    Paginator<News> newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(2).build();
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -35,14 +34,7 @@ public class NewsController {
     @Path("/{id}")
     @Produces(MediaType.TEXT_HTML)
     public void getNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
-        List<News> listNews = newsService.fetchNews();
-
-        if (listNews.size() < id) {
-            logger.error("Запрос несуществующей новости по id:" + id);
-            throw new IllegalArgumentException();
-        }
-
-        News news = listNews.get(id);
+        News news = newsService.fetchSingleNews(id);
         request.setAttribute("news", news);
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/byIndex.jsp");
@@ -53,6 +45,10 @@ public class NewsController {
     @Path("/page/{id}")
     @Produces(MediaType.TEXT_HTML)
     public void newsOnPage(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
+        int sizePage = Config.getInstance().getPageSize();
+
+        Paginator<News> newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
+
         newsPaginator.setCurrentPage(id);
 
         request.setAttribute("list", newsPaginator);

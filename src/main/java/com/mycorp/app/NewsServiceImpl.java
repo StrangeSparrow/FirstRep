@@ -13,7 +13,9 @@ public class NewsServiceImpl implements NewsService{
     public List<News> fetchNews() {
         List<News> newsList = new ArrayList<>();
 
-        try (Scanner scanner = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream("news.csv"), StandardCharsets.UTF_8)) {
+        String newsFileName = Config.getInstance().getNewsFileName();
+
+        try (Scanner scanner = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream(newsFileName), StandardCharsets.UTF_8)) {
             scanner.useDelimiter(Constants.DELIMETER);
 
             while (scanner.hasNext()) {
@@ -23,5 +25,16 @@ public class NewsServiceImpl implements NewsService{
             }
         }
         return newsList;
+    }
+
+    @Override
+    public News fetchSingleNews(int id) {
+        List<News> newsList = fetchNews();
+        if (id > newsList.size()) {
+            logger.error("Запрос несуществующей новости по id:" + id);
+            throw new IllegalArgumentException();
+        }
+
+        return newsList.get(id);
     }
 }

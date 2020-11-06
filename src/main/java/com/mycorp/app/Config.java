@@ -15,7 +15,8 @@ public class Config {
 
     public enum Parameters {
         PAGE_SIZE("news.page_size"),
-        ONLY_HEADERS("news.list.only_headers");
+        ONLY_HEADERS("news.list.only_headers"),
+        NEWS_FILENAME("news.file_name");
 
         private final String param;
 
@@ -30,6 +31,10 @@ public class Config {
 
     public static Config getInstance() {
         return Instance;
+    }
+
+    public String getNewsFileName() {
+        return getParam(Parameters.NEWS_FILENAME.getParam());
     }
 
     public int getPageSize() {

@@ -10,7 +10,7 @@ public class PaginatorImpl<T> implements Paginator<T> {
     private List<T> dataList;
 
     public PaginatorImpl(){
-        pageSize = 1;
+        pageSize = 5;
         currentPage = 1;
         totalPage = 1;
     }
@@ -56,22 +56,23 @@ public class PaginatorImpl<T> implements Paginator<T> {
     @Override
     public void setDataList(List<T> list) {
         dataList = list;
+        findTotalPage();
     }
 
     @Override
     public List<T> getDataPage() {
+        if (dataList == null)
+            return null;
+
         int offset = pageSize * (currentPage - 1);
 
-        List<T> resultList = new ArrayList<>();
-        for (int i = 0; i < pageSize; i++) {
-            resultList.add(dataList.get(i + offset));
-        }
+        List<T> resultList = dataList.subList(offset, (offset + pageSize > dataList.size() ? dataList.size() : offset + pageSize));
 
         return resultList;
     }
 
     private void findTotalPage() {
-        if (pageSize > dataList.size()) {
+        if (dataList == null || pageSize > dataList.size()) {
             totalPage = 1;
             return;
         }
