@@ -68,7 +68,24 @@ public class AdminController {
 
     @POST
     @Path("/edit/{id}")
-    public String editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) {
-        return "Edit " + id;
+    public void editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
+        News news = newsService.fetchSingleNews(id);
+        request.setAttribute("news", news);
+        request.setAttribute("index", id);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/editNews.jsp");
+        requestDispatcher.forward(request, response);
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/addEditNews")
+    public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws InterruptedException {
+        Thread thread = new Thread(() -> newsService.editNews(new News(head, briefly, full), id));
+        thread.start();
+        Thread.sleep(5000);
+
+        URI uri = UriBuilder.fromUri("admin/page/1").build();
+        return Response.seeOther(uri).build();
     }
 }
