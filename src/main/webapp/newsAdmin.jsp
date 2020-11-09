@@ -10,6 +10,7 @@
         <title>Admin News</title>
     </head>
     <body>
+    <jsp:include page="addNews.jsp" />
         <%
             Paginator paginator = (Paginator)request.getAttribute("list");
             List<News> listNews = paginator.getDataPage();

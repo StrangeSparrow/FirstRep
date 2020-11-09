@@ -52,4 +52,17 @@ public class AdminController {
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_HTML)
+    @Path("/add")
+    public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) throws InterruptedException {
+        Thread thread = new Thread(() -> newsService.addNews(head, briefly, full));
+        thread.start();
+        Thread.sleep(5000);
+
+        URI uri = UriBuilder.fromUri("admin/page/1").build();
+        return Response.seeOther(uri).build();
+    }
 }

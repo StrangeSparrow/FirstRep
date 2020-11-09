@@ -32,14 +32,14 @@ public class NewsServiceImpl implements NewsService{
 
     @Override
     public void addNews(String head, String briefly, String full) {
-        String newsFileName = Config.getInstance().getNewsFileName();
-        try (PrintWriter writer = new PrintWriter(new FileOutputStream("src/main/resources/news.csv", true), true)) {
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream("webapps/my-app-3.5/WEB-INF/classes/news.csv", true), StandardCharsets.UTF_8))) {
             writer.println();
             writer.println(Constants.DELIMETER);
             writer.printf("%s%s\n%s%s\n%s", head, Constants.SPLIT, briefly, Constants.SPLIT, full);
             writer.flush();
         } catch (FileNotFoundException e) {
             logger.error(e);
+            throw new IllegalArgumentException();
         }
     }
 
