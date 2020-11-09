@@ -22,7 +22,8 @@
                 out.println("<i>" + listNews.get(i).getBriefly() + "</i><p>");
                 out.println("<a href=../../" + (i + offset) + ">Читать полностью</a>");
                 out.print("<form method=\"post\">" +
-                           "<p><input type=\"submit\" value=\"Удалить\" formaction=\"../delete/" + (i + offset) + "\"></p>" +
+                           " <input type=\"submit\" value=\"Удалить\" formaction=\"../delete/" + (i + offset) + "\"> " +
+                           " <input type=\"submit\" value=\"Редактировать\" formaction=\"../edit/" + (i + offset) + "\"> " +
                            "</form>");
                 out.print("<hr class=\"line\">");
             }

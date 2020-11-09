@@ -89,7 +89,13 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public void editNews(int id) {
+    public void editNews(News news, int id) {
+        List<News> newsList = fetchNews();
 
+        newsList.remove(id);
+        newsList.add(id, news);
+        Collections.reverse(newsList);
+
+        fillNews(newsList);
     }
 }

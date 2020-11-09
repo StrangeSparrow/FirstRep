@@ -65,4 +65,10 @@ public class AdminController {
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();
     }
+
+    @POST
+    @Path("/edit/{id}")
+    public String editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) {
+        return "Edit " + id;
+    }
 }
