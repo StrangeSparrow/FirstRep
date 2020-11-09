@@ -2,8 +2,10 @@ package com.mycorp.app;
 
 import org.apache.log4j.Logger;
 
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,7 +26,56 @@ public class NewsServiceImpl implements NewsService{
                 newsList.add(new News(data[0], data[1], data[2]));
             }
         }
+        Collections.reverse(newsList);
         return newsList;
+    }
+
+    @Override
+    public void addNews(String head, String briefly, String full) {
+        String newsFileName = Config.getInstance().getNewsFileName();
+        try (PrintWriter writer = new PrintWriter(new FileOutputStream("src/main/resources/news.csv", true), true)) {
+            writer.println();
+            writer.println(Constants.DELIMETER);
+            writer.printf("%s%s\n%s%s\n%s", head, Constants.SPLIT, briefly, Constants.SPLIT, full);
+            writer.flush();
+        } catch (FileNotFoundException e) {
+            logger.error(e);
+        }
+    }
+
+    @Override
+    public void addNews(News news) {
+        addNews(news.getHead(), news.getBriefly(), news.getFull());
+    }
+
+    @Override
+    public void deleteNews(int id) {
+        List<News> newsList = fetchNews();
+
+        if (id > newsList.size()) {
+            logger.error("Запрос на несуществующий id");
+            return;
+        }
+        newsList.remove(id);
+        Collections.reverse(newsList);
+
+//        try (PrintWriter writer = new PrintWriter(new FileOutputStream("src/main/resources/news.csv"))) {
+        try (PrintWriter writer = new PrintWriter("webapps/my-app-3.5/WEB-INF/classes/news.csv", "UTF-8")) {
+            for (int i = 0; i < newsList.size(); i++) {
+                News news = newsList.get(i);
+                writer.print(Constants.DELIMETER);
+                writer.printf("%s%s%s%s%s", news.getHead(), Constants.SPLIT, news.getBriefly(), Constants.SPLIT, news.getFull());
+                writer.flush();
+            }
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            logger.error(e);
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void editNews(int id) {
+
     }
 
     @Override

@@ -6,8 +6,8 @@
 
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>News</title>
+        <meta charset="UTF-8" http-equiv="Cache-Control" content="no-cache">
+        <title>Admin News</title>
     </head>
     <body>
         <%
@@ -19,7 +19,11 @@
             for (int i = 0; i < listNews.size(); i++) {
                 out.println("<h2>" + listNews.get(i).getHead() + "</h2>");
                 out.println("<i>" + listNews.get(i).getBriefly() + "</i><p>");
-                out.print("<a href=../../news/" + (i + offset) + ">Читать полностью</a>");
+                out.println("<a href=../../" + (i + offset) + ">Читать полностью</a>");
+                out.print("<form method=\"post\">" +
+                           "<p><input type=\"submit\" value=\"Удалить\" formaction=\"../delete/" + (i + offset) + "\"></p>" +
+                           "</form>");
+                out.print("<hr class=\"line\">");
             }
         %>
         <br>
