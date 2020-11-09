@@ -9,4 +9,5 @@ public interface NewsService {
     void addNews(News news);
     void deleteNews(int id);
     void editNews(int id);
+    public void fillNews(List<News> newsList);
 }

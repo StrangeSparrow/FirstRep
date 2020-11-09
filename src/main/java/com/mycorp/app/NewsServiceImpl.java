@@ -59,7 +59,22 @@ public class NewsServiceImpl implements NewsService{
         newsList.remove(id);
         Collections.reverse(newsList);
 
-//        try (PrintWriter writer = new PrintWriter(new FileOutputStream("src/main/resources/news.csv"))) {
+        fillNews(newsList);
+    }
+
+    @Override
+    public News fetchSingleNews(int id) {
+        List<News> newsList = fetchNews();
+        if (id > newsList.size()) {
+            logger.error("Запрос несуществующей новости по id:" + id);
+            throw new IllegalArgumentException();
+        }
+
+        return newsList.get(id);
+    }
+
+    @Override
+    public void fillNews(List<News> newsList) {
         try (PrintWriter writer = new PrintWriter("webapps/my-app-3.5/WEB-INF/classes/news.csv", "UTF-8")) {
             for (int i = 0; i < newsList.size(); i++) {
                 News news = newsList.get(i);
@@ -76,16 +91,5 @@ public class NewsServiceImpl implements NewsService{
     @Override
     public void editNews(int id) {
 
-    }
-
-    @Override
-    public News fetchSingleNews(int id) {
-        List<News> newsList = fetchNews();
-        if (id > newsList.size()) {
-            logger.error("Запрос несуществующей новости по id:" + id);
-            throw new IllegalArgumentException();
-        }
-
-        return newsList.get(id);
     }
 }

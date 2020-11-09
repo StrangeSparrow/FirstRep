@@ -60,7 +60,7 @@ public class AdminController {
     public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) throws InterruptedException {
         Thread thread = new Thread(() -> newsService.addNews(head, briefly, full));
         thread.start();
-        Thread.sleep(5000);
+        Thread.sleep(500);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();
