@@ -80,8 +80,8 @@ public class NewsServiceImpl implements NewsService{
                 News news = newsList.get(i);
                 writer.print(Constants.DELIMETER);
                 writer.printf("%s%s%s%s%s", news.getHead(), Constants.SPLIT, news.getBriefly(), Constants.SPLIT, news.getFull());
-                writer.flush();
             }
+            writer.flush();
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             logger.error(e);
             throw new IllegalArgumentException();

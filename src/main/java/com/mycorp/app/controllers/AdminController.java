@@ -48,6 +48,7 @@ public class AdminController {
         Thread thread = new Thread(() -> newsService.deleteNews(id));
         thread.start();
         Thread.sleep(5000);
+        newsService.deleteNews(id);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();
