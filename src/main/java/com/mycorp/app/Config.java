@@ -16,7 +16,8 @@ public class Config {
     public enum Parameters {
         PAGE_SIZE("news.page_size"),
         ONLY_HEADERS("news.list.only_headers"),
-        NEWS_FILENAME("news.file_name");
+        NEWS_FILENAME("news.file_name"),
+        LOCAL_NEWS_FILENAME("news.local_file_name");
 
         private final String param;
 
@@ -35,6 +36,10 @@ public class Config {
 
     public String getNewsFileName() {
         return getParam(Parameters.NEWS_FILENAME.getParam());
+    }
+
+    public String getLocalNewsFileName() {
+        return getParam(Parameters.LOCAL_NEWS_FILENAME.getParam());
     }
 
     public int getPageSize() {

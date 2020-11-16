@@ -18,7 +18,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 
-@Path("/")
+@Path("/news")
 public class NewsController {
     private final static Logger logger = Logger.getLogger(NewsController.class);
     NewsService newsService = new NewsServiceImpl();
@@ -26,7 +26,7 @@ public class NewsController {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response allNews() {
-        URI uri = UriBuilder.fromUri("page/1").build();
+        URI uri = UriBuilder.fromUri("/my-app-3.5/news.html").build();
         return Response.seeOther(uri).build();
     }
 

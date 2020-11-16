@@ -5,16 +5,11 @@
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
     <servlet>
-        <servlet-name>SimpleServlet</servlet-name>
-        <servlet-class>com.mycorp.app.TestServlet</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>NewsRest</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>com.mycorp.app</param-value>
+            <param-value>com.mycorp.app.controllers</param-value>
         </init-param>
         <init-param>
             <param-name>jersey.config.server.provider.scanning.recursive</param-name>
@@ -24,11 +19,6 @@
 
     <servlet-mapping>
         <servlet-name>NewsRest</servlet-name>
-        <url-pattern>/news/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SimpleServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/app/*</url-pattern>
     </servlet-mapping>
 </web-app>

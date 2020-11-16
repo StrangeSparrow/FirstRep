@@ -2,8 +2,10 @@ package com.mycorp.app;
 
 import org.apache.log4j.Logger;
 
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,7 +26,39 @@ public class NewsServiceImpl implements NewsService{
                 newsList.add(new News(data[0], data[1], data[2]));
             }
         }
+        Collections.reverse(newsList);
         return newsList;
+    }
+
+    public void addNews(String head, String briefly, String full) {
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(Config.getInstance().getLocalNewsFileName(), true), StandardCharsets.UTF_8))) {
+            writer.println();
+            writer.println(Constants.DELIMETER);
+            writer.printf("%s%s\n%s%s\n%s", head, Constants.SPLIT, briefly, Constants.SPLIT, full);
+            writer.flush();
+        } catch (FileNotFoundException e) {
+            logger.error(e);
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void addNews(News news) {
+        addNews(news.getHead(), news.getBriefly(), news.getFull());
+    }
+
+    @Override
+    public void deleteNews(int id) {
+        List<News> newsList = fetchNews();
+
+        if (id > newsList.size()) {
+            logger.error("Запрос на несуществующий id");
+            return;
+        }
+        newsList.remove(id);
+        Collections.reverse(newsList);
+
+        fillNews(newsList);
     }
 
     @Override
@@ -36,5 +70,31 @@ public class NewsServiceImpl implements NewsService{
         }
 
         return newsList.get(id);
+    }
+
+    public void fillNews(List<News> newsList) {
+        try (PrintWriter writer = new PrintWriter(Config.getInstance().getLocalNewsFileName(), "UTF-8")) {
+            for (int i = 0; i < newsList.size(); i++) {
+                News news = newsList.get(i);
+                writer.print(Constants.DELIMETER);
+                writer.printf("%s%s%s%s%s", news.getHead(), Constants.SPLIT, news.getBriefly(), Constants.SPLIT, news.getFull());
+            }
+            writer.flush();
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            logger.error(e);
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void editNews(News news) {
+        List<News> newsList = fetchNews();
+        int id = news.getId();
+
+        newsList.remove(id);
+        newsList.add(id, news);
+        Collections.reverse(newsList);
+
+        fillNews(newsList);
     }
 }
