@@ -10,6 +10,9 @@
         <title>News</title>
     </head>
     <body>
+    <table>
+    <tr><td width="20%"></td>
+    <td>
         <%
             Paginator paginator = (Paginator)request.getAttribute("list");
             List<News> listNews = paginator.getDataPage();
@@ -22,6 +25,10 @@
                 out.print("<a href=../../news/" + (i + offset) + ">Читать полностью</a>");
             }
         %>
+    </td>
+    <td width="20%"></td>
+    </tr>
+    </table>
         <br>
         <br>
         <p align="center">

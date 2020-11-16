@@ -73,7 +73,6 @@ public class NewsServiceImpl implements NewsService{
         return newsList.get(id);
     }
 
-    @Override
     public void fillNews(List<News> newsList) {
         try (PrintWriter writer = new PrintWriter("webapps/my-app-3.5/WEB-INF/classes/news.csv", "UTF-8")) {
             for (int i = 0; i < newsList.size(); i++) {

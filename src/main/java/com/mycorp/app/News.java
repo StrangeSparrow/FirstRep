@@ -4,6 +4,7 @@ public class News {
     private String head;
     private String briefly;
     private String full;
+    private int id;
 
     public News(String head, String briefly, String full) {
         this.head = head;

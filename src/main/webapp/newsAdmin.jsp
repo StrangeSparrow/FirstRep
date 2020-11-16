@@ -10,6 +10,9 @@
         <title>Admin News</title>
     </head>
     <body>
+    <table>
+    <tr><td width="20%"></td>
+    <td>
     <jsp:include page="addNews.jsp" />
         <%
             Paginator paginator = (Paginator)request.getAttribute("list");
@@ -20,14 +23,16 @@
             for (int i = 0; i < listNews.size(); i++) {
                 out.println("<h2>" + listNews.get(i).getHead() + "</h2>");
                 out.println("<i>" + listNews.get(i).getBriefly() + "</i><p>");
-                out.println("<a href=../../" + (i + offset) + ">Читать полностью</a>");
-                out.print("<form method=\"post\">" +
-                           " <input type=\"submit\" value=\"Удалить\" formaction=\"../delete/" + (i + offset) + "\"> " +
-                           " <input type=\"submit\" value=\"Редактировать\" formaction=\"../edit/" + (i + offset) + "\"> " +
-                           "</form>");
+                out.println("<a href=../../news/" + (i + offset) + ">Читать полностью</a>");
+                out.println("<p><a href=../edit/" + (i + offset) + ">Редактировать</a>");
+                out.println("<a href=../delete/" + (i + offset) + ">Удалить</a>");
                 out.print("<hr class=\"line\">");
             }
         %>
+    </td>
+    <td width="20%"></td>
+    </tr>
+    </table>
         <br>
         <br>
         <p align="center">

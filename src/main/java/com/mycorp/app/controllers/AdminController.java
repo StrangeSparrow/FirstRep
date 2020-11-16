@@ -21,7 +21,7 @@ public class AdminController {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response adminNews() {
-        URI uri = UriBuilder.fromUri("admin/page/1").build();
+        URI uri = UriBuilder.fromUri("/my-app-3.5/admin.html").build();
         return Response.seeOther(uri).build();
     }
 
@@ -41,14 +41,13 @@ public class AdminController {
         requestDispatcher.forward(request, response);
     }
 
-    @POST
+    @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/delete/{id}")
     public Response deleteNews(@PathParam("id") int id) throws InterruptedException {
         Thread thread = new Thread(() -> newsService.deleteNews(id));
         thread.start();
         Thread.sleep(5000);
-        newsService.deleteNews(id);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();
@@ -59,15 +58,13 @@ public class AdminController {
     @Produces(MediaType.TEXT_HTML)
     @Path("/add")
     public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) throws InterruptedException {
-        Thread thread = new Thread(() -> newsService.addNews(head, briefly, full));
-        thread.start();
-        Thread.sleep(500);
+        newsService.addNews(new News(head, briefly, full));
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();
     }
 
-    @POST
+    @GET
     @Path("/edit/{id}")
     public void editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
         News news = newsService.fetchSingleNews(id);
@@ -82,8 +79,7 @@ public class AdminController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/addEditNews")
     public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws InterruptedException {
-        Thread thread = new Thread(() -> newsService.editNews(new News(head, briefly, full), id));
-        thread.start();
+        newsService.editNews(new News(head, briefly, full), id);
         Thread.sleep(5000);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
