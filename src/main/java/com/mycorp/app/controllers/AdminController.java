@@ -45,9 +45,7 @@ public class AdminController {
     @Produces(MediaType.TEXT_HTML)
     @Path("/delete/{id}")
     public Response deleteNews(@PathParam("id") int id) throws InterruptedException {
-        Thread thread = new Thread(() -> newsService.deleteNews(id));
-        thread.start();
-        Thread.sleep(5000);
+        newsService.deleteNews(id);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();

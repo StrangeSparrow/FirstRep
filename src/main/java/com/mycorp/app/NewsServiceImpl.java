@@ -32,7 +32,7 @@ public class NewsServiceImpl implements NewsService{
 
     @Override
     public void addNews(String head, String briefly, String full) {
-        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream("webapps/my-app-3.5/WEB-INF/classes/news.csv", true), StandardCharsets.UTF_8))) {
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(Config.getInstance().getLocalNewsFileName(), true), StandardCharsets.UTF_8))) {
             writer.println();
             writer.println(Constants.DELIMETER);
             writer.printf("%s%s\n%s%s\n%s", head, Constants.SPLIT, briefly, Constants.SPLIT, full);
@@ -74,7 +74,7 @@ public class NewsServiceImpl implements NewsService{
     }
 
     public void fillNews(List<News> newsList) {
-        try (PrintWriter writer = new PrintWriter("webapps/my-app-3.5/WEB-INF/classes/news.csv", "UTF-8")) {
+        try (PrintWriter writer = new PrintWriter(Config.getInstance().getLocalNewsFileName(), "UTF-8")) {
             for (int i = 0; i < newsList.size(); i++) {
                 News news = newsList.get(i);
                 writer.print(Constants.DELIMETER);
