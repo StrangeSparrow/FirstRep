@@ -80,7 +80,6 @@ public class AdminController {
     @Path("/addEditNews")
     public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws InterruptedException {
         newsService.editNews(new News(head, briefly, full), id);
-        Thread.sleep(5000);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();
