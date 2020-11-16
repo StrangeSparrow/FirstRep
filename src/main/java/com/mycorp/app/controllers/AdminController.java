@@ -77,7 +77,8 @@ public class AdminController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/addEditNews")
     public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws InterruptedException {
-        newsService.editNews(new News(head, briefly, full), id);
+        News news = new News(head, briefly, full, id);
+        newsService.editNews(news);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
         return Response.seeOther(uri).build();

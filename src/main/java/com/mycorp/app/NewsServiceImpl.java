@@ -30,7 +30,6 @@ public class NewsServiceImpl implements NewsService{
         return newsList;
     }
 
-    @Override
     public void addNews(String head, String briefly, String full) {
         try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(Config.getInstance().getLocalNewsFileName(), true), StandardCharsets.UTF_8))) {
             writer.println();
@@ -88,8 +87,9 @@ public class NewsServiceImpl implements NewsService{
     }
 
     @Override
-    public void editNews(News news, int id) {
+    public void editNews(News news) {
         List<News> newsList = fetchNews();
+        int id = news.getId();
 
         newsList.remove(id);
         newsList.add(id, news);

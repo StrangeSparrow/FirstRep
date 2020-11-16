@@ -11,6 +11,12 @@ public class News {
         this.briefly = briefly;
         this.full = full;
     }
+    public News(String head, String briefly, String full, int id) {
+        this.head = head;
+        this.briefly = briefly;
+        this.full = full;
+        this.id = id;
+    }
 
     public String getHead() {
         return head;
@@ -36,4 +42,11 @@ public class News {
         this.full = full;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

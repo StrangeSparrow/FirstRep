@@ -5,8 +5,7 @@ import java.util.List;
 public interface NewsService {
     List<News> fetchNews();
     News fetchSingleNews(int id);
-    void addNews(String head, String briefly, String full);
     void addNews(News news);
     void deleteNews(int id);
-    void editNews(News news, int id);
+    void editNews(News news);
 }
