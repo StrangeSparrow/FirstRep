@@ -14,7 +14,7 @@
         News news = (News)request.getAttribute("news");
 
         out.println("<h2>" + news.getHead() + "</h2>");
-        out.println(news.getFull());
+        out.println("<p>" + news.getFull() + "</p>");
     %>
     </td>
     <td width="20%"></td>
