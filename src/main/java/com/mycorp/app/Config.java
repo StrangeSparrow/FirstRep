@@ -17,7 +17,10 @@ public class Config {
         PAGE_SIZE("news.page_size"),
         ONLY_HEADERS("news.list.only_headers"),
         NEWS_FILENAME("news.file_name"),
-        LOCAL_NEWS_FILENAME("news.local_file_name");
+        LOCAL_NEWS_FILENAME("news.local_file_name"),
+        DB_NAME("db.name"),
+        DB_PASS("db.password"),
+        DB_URL("db.url");
 
         private final String param;
 
@@ -32,6 +35,18 @@ public class Config {
 
     public static Config getInstance() {
         return Instance;
+    }
+
+    public String getDBName() {
+        return getParam(Parameters.DB_NAME.getParam());
+    }
+
+    public String getDBPass() {
+        return getParam(Parameters.DB_PASS.getParam());
+    }
+
+    public String getDBURL() {
+        return getParam(Parameters.DB_URL.getParam());
     }
 
     public String getNewsFileName() {
