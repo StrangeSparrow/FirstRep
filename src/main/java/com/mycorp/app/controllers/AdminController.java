@@ -67,7 +67,6 @@ public class AdminController {
     public void editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
         News news = newsService.fetchSingleNews(id);
         request.setAttribute("news", news);
-        request.setAttribute("index", id);
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/editNews.jsp");
         requestDispatcher.forward(request, response);

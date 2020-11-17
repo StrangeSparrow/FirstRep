@@ -17,12 +17,10 @@
             Paginator paginator = (Paginator)request.getAttribute("list");
             List<News> listNews = paginator.getDataPage();
 
-            int offset = paginator.getPageSize() * (paginator.getCurrentPage() - 1);
-
             for (int i = 0; i < listNews.size(); i++) {
                 out.println("<h2>" + listNews.get(i).getHead() + "</h2>");
                 out.println("<i>" + listNews.get(i).getBriefly() + "</i><p>");
-                out.print("<a href=../../news/" + (i + offset) + ">Читать полностью</a>");
+                out.print("<a href=../../news/" + listNews.get(i).getId() + ">Читать полностью</a>");
             }
         %>
     </td>
