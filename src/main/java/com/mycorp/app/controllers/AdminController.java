@@ -16,7 +16,14 @@ import java.net.URI;
 
 @Path("/admin")
 public class AdminController {
-    NewsService newsService = new NewsServiceDbImpl();
+    private static NewsService newsService;
+    static {
+        if (Config.getInstance().getSource().equals("database")) {
+            newsService = new NewsServiceDbImpl();
+        } else {
+            newsService = new NewsServiceImpl();
+        }
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)

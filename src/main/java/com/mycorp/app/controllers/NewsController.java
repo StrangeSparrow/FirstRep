@@ -21,7 +21,14 @@ import java.net.URI;
 @Path("/news")
 public class NewsController {
     private final static Logger logger = Logger.getLogger(NewsController.class);
-    NewsService newsService = new NewsServiceDbImpl();
+    private static NewsService newsService;
+    static {
+        if (Config.getInstance().getSource().equals("database")) {
+            newsService = new NewsServiceDbImpl();
+        } else {
+            newsService = new NewsServiceImpl();
+        }
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
