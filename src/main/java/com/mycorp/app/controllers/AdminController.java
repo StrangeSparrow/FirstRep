@@ -16,7 +16,7 @@ import java.net.URI;
 
 @Path("/admin")
 public class AdminController {
-    NewsService newsService = new NewsServiceImpl();
+    NewsService newsService = new NewsServiceDbImpl();
 
     @GET
     @Produces(MediaType.TEXT_HTML)
