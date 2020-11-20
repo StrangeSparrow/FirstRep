@@ -5,6 +5,7 @@ import org.flywaydb.core.Flyway;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,8 @@ public class NewsServiceDbImpl implements NewsService {
 
     static {
         Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream(Config.getInstance().getDBMigration())){
-            properties.load(fis);
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(Config.getInstance().getDBMigration())){
+            properties.load(is);
         } catch (IOException e) {
             logger.error(e);
         }
