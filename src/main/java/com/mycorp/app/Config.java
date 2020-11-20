@@ -21,6 +21,7 @@ public class Config {
         DB_NAME("db.name"),
         DB_PASS("db.password"),
         DB_URL("db.url"),
+        DB_MIGRATION("db.migration_prop"),
         APP_SOURCE("app.data_source");
 
         private final String param;
@@ -40,6 +41,10 @@ public class Config {
 
     public String getDBName() {
         return getParam(Parameters.DB_NAME.getParam());
+    }
+
+    public String getDBMigration() {
+        return getParam(Parameters.DB_MIGRATION.getParam());
     }
 
     public String getSource() { return getParam(Parameters.APP_SOURCE.getParam()); }

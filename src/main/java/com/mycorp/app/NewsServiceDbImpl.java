@@ -1,13 +1,28 @@
 package com.mycorp.app;
 
 import org.apache.log4j.Logger;
+import org.flywaydb.core.Flyway;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class NewsServiceDbImpl implements NewsService {
     private final static Logger logger = Logger.getLogger(NewsServiceDbImpl.class);
+
+    static {
+        Properties properties = new Properties();
+        try (FileInputStream fis = new FileInputStream(Config.getInstance().getDBMigration())){
+            properties.load(fis);
+        } catch (IOException e) {
+            logger.error(e);
+        }
+        Flyway flyway = Flyway.configure().configuration(properties).load();
+        flyway.migrate();
+    }
 
     public NewsServiceDbImpl() {
         try {
