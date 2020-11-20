@@ -76,7 +76,7 @@ public class NewsServiceImpl implements NewsService{
     }
 
     public void fillNews(List<News> newsList) {
-        try (PrintWriter writer = new PrintWriter(Config.getInstance().getLocalNewsFileName(), "UTF-8")) {
+        try (PrintWriter writer = new PrintWriter(Config.getInstance().getLocalNewsFileName(), StandardCharsets.UTF_8)) {
             for (int i = 0; i < newsList.size(); i++) {
                 News news = newsList.get(i);
                 writer.print(Constants.DELIMETER);
@@ -86,6 +86,8 @@ public class NewsServiceImpl implements NewsService{
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             logger.error(e);
             throw new IllegalArgumentException();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

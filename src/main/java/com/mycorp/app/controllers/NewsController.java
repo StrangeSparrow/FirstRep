@@ -21,7 +21,7 @@ import java.net.URI;
 @Path("/news")
 public class NewsController {
     private final static Logger logger = Logger.getLogger(NewsController.class);
-    private static NewsService newsService;
+    private static final NewsService newsService;
     static {
         if (Config.getInstance().getSource().equals("database")) {
             newsService = new NewsServiceDbImpl();
@@ -54,7 +54,7 @@ public class NewsController {
     public void newsOnPage(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
         int sizePage = Config.getInstance().getPageSize();
 
-        Paginator<News> newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
+        Paginator newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
 
         newsPaginator.setCurrentPage(id);
 

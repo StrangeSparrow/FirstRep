@@ -3,7 +3,7 @@ package com.mycorp.app;
 import java.util.List;
 
 public class PaginatorBuilder {
-    private Paginator paginator;
+    private final Paginator paginator;
 
     public PaginatorBuilder() {
         paginator = new PaginatorImpl();

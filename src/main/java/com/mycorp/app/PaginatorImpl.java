@@ -1,6 +1,5 @@
 package com.mycorp.app;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PaginatorImpl<T> implements Paginator<T> {
@@ -66,9 +65,7 @@ public class PaginatorImpl<T> implements Paginator<T> {
 
         int offset = pageSize * (currentPage - 1);
 
-        List<T> resultList = dataList.subList(offset, (offset + pageSize > dataList.size() ? dataList.size() : offset + pageSize));
-
-        return resultList;
+        return dataList.subList(offset, (Math.min(offset + pageSize, dataList.size())));
     }
 
     private void findTotalPage() {

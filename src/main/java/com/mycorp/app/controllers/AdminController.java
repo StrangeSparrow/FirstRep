@@ -16,7 +16,7 @@ import java.net.URI;
 
 @Path("/admin")
 public class AdminController {
-    private static NewsService newsService;
+    private static final NewsService newsService;
     static {
         if (Config.getInstance().getSource().equals("database")) {
             newsService = new NewsServiceDbImpl();
@@ -38,7 +38,7 @@ public class AdminController {
     public void editorNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
         int sizePage = Config.getInstance().getPageSize();
 
-        Paginator<News> newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
+        Paginator newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
 
         newsPaginator.setCurrentPage(id);
 
@@ -51,7 +51,7 @@ public class AdminController {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/delete/{id}")
-    public Response deleteNews(@PathParam("id") int id) throws InterruptedException {
+    public Response deleteNews(@PathParam("id") int id) {
         newsService.deleteNews(id);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
@@ -62,7 +62,7 @@ public class AdminController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
     @Path("/add")
-    public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) throws InterruptedException {
+    public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) {
         newsService.addNews(new News(head, briefly, full));
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
@@ -82,7 +82,7 @@ public class AdminController {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/addEditNews")
-    public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws InterruptedException {
+    public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) {
         News news = new News(head, briefly, full, id);
         newsService.editNews(news);
 

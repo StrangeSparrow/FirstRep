@@ -3,7 +3,6 @@ package com.mycorp.app;
 import org.apache.log4j.Logger;
 import org.flywaydb.core.Flyway;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;

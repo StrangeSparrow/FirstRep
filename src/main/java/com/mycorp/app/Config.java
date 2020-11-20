@@ -95,6 +95,8 @@ public class Config {
                     return result;
                 }
             }
+        } catch (Exception e) {
+            logger.error(e);
         }
         return result;
     }
