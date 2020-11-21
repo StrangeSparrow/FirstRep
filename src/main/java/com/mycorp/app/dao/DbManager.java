@@ -1,7 +1,7 @@
 package com.mycorp.app.dao;
 
 import com.mycorp.app.Config;
-import com.mycorp.app.NewsServiceDbImpl;
+import com.mycorp.app.news.NewsServiceDbImpl;
 import org.apache.log4j.Logger;
 import org.flywaydb.core.Flyway;
 

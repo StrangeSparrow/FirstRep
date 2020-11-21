@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.mycorp.app.Paginator" %>
-<%@ page import="com.mycorp.app.PaginatorImpl" %>
-<%@ page import="com.mycorp.app.News" %>
+<%@ page import="com.mycorp.app.paginator.Paginator" %>
+<%@ page import="com.mycorp.app.paginator.PaginatorImpl" %>
+<%@ page import="com.mycorp.app.news.News" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>

@@ -1,4 +1,4 @@
-<%@ page import="com.mycorp.app.News" %>
+<%@ page import="com.mycorp.app.news.News" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>

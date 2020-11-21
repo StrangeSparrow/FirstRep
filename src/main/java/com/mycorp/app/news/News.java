@@ -1,4 +1,4 @@
-package com.mycorp.app;
+package com.mycorp.app.news;
 
 public class News {
     private String head;

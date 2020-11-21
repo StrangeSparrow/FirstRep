@@ -1,6 +1,12 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.*;
+import com.mycorp.app.news.News;
+import com.mycorp.app.news.NewsService;
+import com.mycorp.app.news.NewsServiceDbImpl;
+import com.mycorp.app.news.NewsServiceImpl;
+import com.mycorp.app.paginator.Paginator;
+import com.mycorp.app.paginator.PaginatorBuilder;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -41,7 +47,7 @@ public class AdminController {
     }
 
     @GET
-    @Path("/page/{id}")
+    @Path("/news/page/{id}")
     @Produces(MediaType.TEXT_HTML)
     public void editorNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         int sizePage = Config.getInstance().getPageSize();
@@ -58,27 +64,27 @@ public class AdminController {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/delete/{id}")
+    @Path("/news/delete/{id}")
     public Response deleteNews(@PathParam("id") int id) throws SQLException {
         newsService.deleteNews(id);
 
-        URI uri = UriBuilder.fromUri("admin/page/1").build();
+        URI uri = UriBuilder.fromUri("admin/news/page/1").build();
         return Response.seeOther(uri).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
-    @Path("/add")
+    @Path("/news/add")
     public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) throws SQLException {
         newsService.addNews(new News(head, briefly, full));
 
-        URI uri = UriBuilder.fromUri("admin/page/1").build();
+        URI uri = UriBuilder.fromUri("admin/news/page/1").build();
         return Response.seeOther(uri).build();
     }
 
     @GET
-    @Path("/edit/{id}")
+    @Path("/news/edit/{id}")
     public void editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         News news = newsService.fetchSingleNews(id);
         request.setAttribute("news", news);
@@ -89,12 +95,12 @@ public class AdminController {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path("/addEditNews")
+    @Path("/news/addEditNews")
     public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws SQLException {
         News news = new News(head, briefly, full, id);
         newsService.editNews(news);
 
-        URI uri = UriBuilder.fromUri("admin/page/1").build();
+        URI uri = UriBuilder.fromUri("admin/news/page/1").build();
         return Response.seeOther(uri).build();
     }
 }

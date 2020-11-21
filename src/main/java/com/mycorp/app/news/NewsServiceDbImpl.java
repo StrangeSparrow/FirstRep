@@ -1,4 +1,4 @@
-package com.mycorp.app;
+package com.mycorp.app.news;
 
 import com.mycorp.app.dao.DbManager;
 import org.apache.log4j.Logger;
