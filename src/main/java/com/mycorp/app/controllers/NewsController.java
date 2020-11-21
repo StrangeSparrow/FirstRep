@@ -27,7 +27,7 @@ public class NewsController {
         if (Config.getInstance().getSource().equals("database")) {
             try {
                 newsService = new NewsServiceDbImpl();
-            } catch (SQLException | IOException e) {
+            } catch (SQLException e) {
                 logger.error(e);
             }
         } else {

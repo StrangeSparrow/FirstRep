@@ -3,7 +3,6 @@ package com.mycorp.app;
 import com.mycorp.app.dao.DbManager;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +11,11 @@ public class NewsServiceDbImpl implements NewsService {
     private final static Logger logger = Logger.getLogger(NewsServiceDbImpl.class);
     private final DbManager dbManager;
 
-    public NewsServiceDbImpl() throws SQLException, IOException {
+    public NewsServiceDbImpl() throws SQLException {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             dbManager = new DbManager();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             logger.error(e);
             throw e;
         }

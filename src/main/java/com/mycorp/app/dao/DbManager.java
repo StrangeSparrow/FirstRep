@@ -15,23 +15,25 @@ import java.util.Properties;
 public class DbManager {
     private final static Logger logger = Logger.getLogger(NewsServiceDbImpl.class);
 
-    public DbManager() throws SQLException, IOException {
+    public DbManager() throws SQLException {
         try {
-            migrate();
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             logger.error(e);
             throw e;
         }
     }
 
-    private void migrate() throws IOException {
+    static {
+        migrate();
+    }
+
+    private static void migrate() {
         Properties properties = new Properties();
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(Config.getInstance().getDBMigration())){
             properties.load(is);
         } catch (IOException e) {
             logger.error(e);
-            throw e;
         }
         Flyway flyway = Flyway.configure().configuration(properties).load();
         flyway.migrate();
