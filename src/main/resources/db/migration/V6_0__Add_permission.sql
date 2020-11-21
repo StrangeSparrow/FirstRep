@@ -1,0 +1,9 @@
+INSERT INTO `permission` (`id`, `name`) VALUES ('1', 'create news');
+INSERT INTO `permission` (`id`, `name`) VALUES ('2', 'edit news');
+INSERT INTO `permission` (`id`, `name`) VALUES ('3', 'delete news');
+INSERT INTO `permission` (`id`, `name`) VALUES ('4', 'create group');
+INSERT INTO `permission` (`id`, `name`) VALUES ('5', 'edit group');
+INSERT INTO `permission` (`id`, `name`) VALUES ('6', 'delete group');
+INSERT INTO `permission` (`id`, `name`) VALUES ('7', 'create user');
+INSERT INTO `permission` (`id`, `name`) VALUES ('8', 'edit user');
+INSERT INTO `permission` (`id`, `name`) VALUES ('9', 'delete user');
