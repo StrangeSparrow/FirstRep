@@ -20,10 +20,12 @@ public class NewsServiceImpl implements NewsService{
         try (Scanner scanner = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream(newsFileName), StandardCharsets.UTF_8)) {
             scanner.useDelimiter(Constants.DELIMETER);
 
+            int id = 0;
             while (scanner.hasNext()) {
                 String[] data;
                 data = scanner.next().split(Constants.SPLIT);
-                newsList.add(new News(data[0], data[1], data[2]));
+                newsList.add(new News(data[0], data[1], data[2], id));
+                id++;
             }
         }
         Collections.reverse(newsList);
@@ -55,8 +57,8 @@ public class NewsServiceImpl implements NewsService{
             logger.error("Запрос на несуществующий id");
             return;
         }
-        newsList.remove(id);
         Collections.reverse(newsList);
+        newsList.remove(id);
 
         fillNews(newsList);
     }
@@ -68,12 +70,13 @@ public class NewsServiceImpl implements NewsService{
             logger.error("Запрос несуществующей новости по id:" + id);
             throw new IllegalArgumentException();
         }
+        int targetId = (newsList.size() - 1) - id;
 
-        return newsList.get(id);
+        return newsList.get(targetId);
     }
 
     public void fillNews(List<News> newsList) {
-        try (PrintWriter writer = new PrintWriter(Config.getInstance().getLocalNewsFileName(), "UTF-8")) {
+        try (PrintWriter writer = new PrintWriter(Config.getInstance().getLocalNewsFileName(), StandardCharsets.UTF_8)) {
             for (int i = 0; i < newsList.size(); i++) {
                 News news = newsList.get(i);
                 writer.print(Constants.DELIMETER);
@@ -83,6 +86,8 @@ public class NewsServiceImpl implements NewsService{
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             logger.error(e);
             throw new IllegalArgumentException();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -91,9 +96,9 @@ public class NewsServiceImpl implements NewsService{
         List<News> newsList = fetchNews();
         int id = news.getId();
 
+        Collections.reverse(newsList);
         newsList.remove(id);
         newsList.add(id, news);
-        Collections.reverse(newsList);
 
         fillNews(newsList);
     }

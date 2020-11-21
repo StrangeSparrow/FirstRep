@@ -1,11 +1,12 @@
 package com.mycorp.app;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface NewsService {
-    List<News> fetchNews();
-    News fetchSingleNews(int id);
-    void addNews(News news);
-    void deleteNews(int id);
-    void editNews(News news);
+    List<News> fetchNews() throws SQLException;
+    News fetchSingleNews(int id) throws SQLException;
+    void addNews(News news) throws SQLException;
+    void deleteNews(int id) throws SQLException;
+    void editNews(News news) throws SQLException;
 }

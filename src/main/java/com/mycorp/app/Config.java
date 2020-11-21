@@ -17,7 +17,12 @@ public class Config {
         PAGE_SIZE("news.page_size"),
         ONLY_HEADERS("news.list.only_headers"),
         NEWS_FILENAME("news.file_name"),
-        LOCAL_NEWS_FILENAME("news.local_file_name");
+        LOCAL_NEWS_FILENAME("news.local_file_name"),
+        DB_NAME("db.name"),
+        DB_PASS("db.password"),
+        DB_URL("db.url"),
+        DB_MIGRATION("db.migration_prop"),
+        APP_SOURCE("app.data_source");
 
         private final String param;
 
@@ -32,6 +37,24 @@ public class Config {
 
     public static Config getInstance() {
         return Instance;
+    }
+
+    public String getDBName() {
+        return getParam(Parameters.DB_NAME.getParam());
+    }
+
+    public String getDBMigration() {
+        return getParam(Parameters.DB_MIGRATION.getParam());
+    }
+
+    public String getSource() { return getParam(Parameters.APP_SOURCE.getParam()); }
+
+    public String getDBPass() {
+        return getParam(Parameters.DB_PASS.getParam());
+    }
+
+    public String getDBURL() {
+        return getParam(Parameters.DB_URL.getParam());
     }
 
     public String getNewsFileName() {
@@ -72,6 +95,8 @@ public class Config {
                     return result;
                 }
             }
+        } catch (Exception e) {
+            logger.error(e);
         }
         return result;
     }

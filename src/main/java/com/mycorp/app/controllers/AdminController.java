@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.*;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,10 +14,24 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 
 @Path("/admin")
 public class AdminController {
-    NewsService newsService = new NewsServiceImpl();
+    private final static Logger logger = Logger.getLogger(NewsController.class);
+
+    private static NewsService newsService = null;
+    static {
+        if (Config.getInstance().getSource().equals("database")) {
+            try {
+                newsService = new NewsServiceDbImpl();
+            } catch (SQLException e) {
+                logger.error(e);
+            }
+        } else {
+            newsService = new NewsServiceImpl();
+        }
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -28,10 +43,10 @@ public class AdminController {
     @GET
     @Path("/page/{id}")
     @Produces(MediaType.TEXT_HTML)
-    public void editorNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
+    public void editorNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         int sizePage = Config.getInstance().getPageSize();
 
-        Paginator<News> newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
+        Paginator newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
 
         newsPaginator.setCurrentPage(id);
 
@@ -44,7 +59,7 @@ public class AdminController {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/delete/{id}")
-    public Response deleteNews(@PathParam("id") int id) throws InterruptedException {
+    public Response deleteNews(@PathParam("id") int id) throws SQLException {
         newsService.deleteNews(id);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
@@ -55,7 +70,7 @@ public class AdminController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
     @Path("/add")
-    public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) throws InterruptedException {
+    public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) throws SQLException {
         newsService.addNews(new News(head, briefly, full));
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
@@ -64,10 +79,9 @@ public class AdminController {
 
     @GET
     @Path("/edit/{id}")
-    public void editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
+    public void editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         News news = newsService.fetchSingleNews(id);
         request.setAttribute("news", news);
-        request.setAttribute("index", id);
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/editNews.jsp");
         requestDispatcher.forward(request, response);
@@ -76,7 +90,7 @@ public class AdminController {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/addEditNews")
-    public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws InterruptedException {
+    public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws SQLException {
         News news = new News(head, briefly, full, id);
         newsService.editNews(news);
 

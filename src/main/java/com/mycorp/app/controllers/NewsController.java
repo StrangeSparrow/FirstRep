@@ -17,11 +17,23 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 
 @Path("/news")
 public class NewsController {
     private final static Logger logger = Logger.getLogger(NewsController.class);
-    NewsService newsService = new NewsServiceImpl();
+    private static NewsService newsService = null;
+    static {
+        if (Config.getInstance().getSource().equals("database")) {
+            try {
+                newsService = new NewsServiceDbImpl();
+            } catch (SQLException e) {
+                logger.error(e);
+            }
+        } else {
+            newsService = new NewsServiceImpl();
+        }
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -33,7 +45,7 @@ public class NewsController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.TEXT_HTML)
-    public void getNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
+    public void getNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         News news = newsService.fetchSingleNews(id);
         request.setAttribute("news", news);
 
@@ -44,10 +56,10 @@ public class NewsController {
     @GET
     @Path("/page/{id}")
     @Produces(MediaType.TEXT_HTML)
-    public void newsOnPage(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
+    public void newsOnPage(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         int sizePage = Config.getInstance().getPageSize();
 
-        Paginator<News> newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
+        Paginator newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
 
         newsPaginator.setCurrentPage(id);
 
