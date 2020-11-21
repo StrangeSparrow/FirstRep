@@ -8,17 +8,17 @@ ADD CONSTRAINT `grooup_user`
   ON DELETE SET NULL
   ON UPDATE SET NULL;
 ;
-ALTER TABLE `news_db`.`group_to_permission`
+ALTER TABLE `group_to_permission`
 ADD INDEX `permission_idx` (`permission` ASC) VISIBLE;
 ;
-ALTER TABLE `news_db`.`group_to_permission`
+ALTER TABLE `group_to_permission`
 ADD CONSTRAINT `permission`
   FOREIGN KEY (`permission`)
-  REFERENCES `news_db`.`permission` (`id`)
+  REFERENCES `permission` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 ADD CONSTRAINT `group`
   FOREIGN KEY (`group`)
-  REFERENCES `news_db`.`group` (`id`)
+  REFERENCES `group` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
