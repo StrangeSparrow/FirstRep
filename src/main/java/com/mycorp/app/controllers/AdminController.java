@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.*;
+import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,13 +14,20 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 
 @Path("/admin")
 public class AdminController {
-    private static final NewsService newsService;
+    private final static Logger logger = Logger.getLogger(NewsController.class);
+
+    private static NewsService newsService = null;
     static {
         if (Config.getInstance().getSource().equals("database")) {
-            newsService = new NewsServiceDbImpl();
+            try {
+                newsService = new NewsServiceDbImpl();
+            } catch (SQLException | IOException e) {
+                logger.error(e);
+            }
         } else {
             newsService = new NewsServiceImpl();
         }
@@ -35,7 +43,7 @@ public class AdminController {
     @GET
     @Path("/page/{id}")
     @Produces(MediaType.TEXT_HTML)
-    public void editorNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
+    public void editorNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         int sizePage = Config.getInstance().getPageSize();
 
         Paginator newsPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(newsService.fetchNews()).setSize(sizePage).build();
@@ -51,7 +59,7 @@ public class AdminController {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/delete/{id}")
-    public Response deleteNews(@PathParam("id") int id) {
+    public Response deleteNews(@PathParam("id") int id) throws SQLException {
         newsService.deleteNews(id);
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
@@ -62,7 +70,7 @@ public class AdminController {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
     @Path("/add")
-    public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) {
+    public Response addNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full) throws SQLException {
         newsService.addNews(new News(head, briefly, full));
 
         URI uri = UriBuilder.fromUri("admin/page/1").build();
@@ -71,7 +79,7 @@ public class AdminController {
 
     @GET
     @Path("/edit/{id}")
-    public void editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException {
+    public void editNews(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         News news = newsService.fetchSingleNews(id);
         request.setAttribute("news", news);
 
@@ -82,7 +90,7 @@ public class AdminController {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/addEditNews")
-    public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) {
+    public Response addEditNews(@FormParam("head") String head, @FormParam("briefly") String briefly, @FormParam("full") String full, @FormParam("id") int id) throws SQLException {
         News news = new News(head, briefly, full, id);
         newsService.editNews(news);
 

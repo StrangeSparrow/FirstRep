@@ -1,47 +1,33 @@
 package com.mycorp.app;
 
+import com.mycorp.app.dao.DbManager;
 import org.apache.log4j.Logger;
-import org.flywaydb.core.Flyway;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class NewsServiceDbImpl implements NewsService {
     private final static Logger logger = Logger.getLogger(NewsServiceDbImpl.class);
+    private final DbManager dbManager;
 
-    static {
-        Properties properties = new Properties();
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(Config.getInstance().getDBMigration())){
-            properties.load(is);
-        } catch (IOException e) {
-            logger.error(e);
-        }
-        Flyway flyway = Flyway.configure().configuration(properties).load();
-        flyway.migrate();
-    }
-
-    public NewsServiceDbImpl() {
+    public NewsServiceDbImpl() throws SQLException, IOException {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-        } catch (SQLException e) {
+            dbManager = new DbManager();
+        } catch (SQLException | IOException e) {
             logger.error(e);
+            throw e;
         }
-    }
-
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(Config.getInstance().getDBURL(), Config.getInstance().getDBName(), Config.getInstance().getDBPass());
     }
 
     @Override
-    public List<News> fetchNews() {
+    public List<News> fetchNews() throws SQLException {
         List<News> newsList = new ArrayList<>();
 
         String query = "SELECT * FROM news_db.news ORDER BY id DESC";
-        try (Connection connection = getConnection();
+        try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             ResultSet resultSet = prStmt.executeQuery();
 
@@ -55,16 +41,17 @@ public class NewsServiceDbImpl implements NewsService {
             }
         } catch (SQLException e) {
             logger.error(e);
+            throw e;
         }
         return newsList;
     }
 
     @Override
-    public News fetchSingleNews(int id) {
+    public News fetchSingleNews(int id) throws SQLException {
         String query = "SELECT * FROM news_db.news WHERE id=?";
         News news = null;
 
-        try (Connection connection = getConnection();
+        try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             prStmt.setInt(1, id);
             ResultSet resultSet = prStmt.executeQuery();
@@ -78,15 +65,16 @@ public class NewsServiceDbImpl implements NewsService {
             }
         } catch (SQLException e) {
             logger.error(e);
+            throw e;
         }
         return news;
     }
 
     @Override
-    public void addNews(News news) {
+    public void addNews(News news) throws SQLException {
         String query = "INSERT INTO news_db.news (head, briefly, full) VALUES (?, ?, ?)";
 
-        try (Connection connection = getConnection();
+        try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             prStmt.setString(1, news.getHead());
             prStmt.setString(2, news.getBriefly());
@@ -95,27 +83,29 @@ public class NewsServiceDbImpl implements NewsService {
             prStmt.executeUpdate();
         } catch (SQLException e) {
             logger.error(e);
+            throw e;
         }
     }
 
     @Override
-    public void deleteNews(int id) {
+    public void deleteNews(int id) throws SQLException {
         String query = "DELETE FROM news_db.news WHERE id=?";
 
-        try (Connection connection = getConnection();
+        try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             prStmt.setInt(1, id);
             prStmt.executeUpdate();
         } catch (SQLException e) {
             logger.error(e);
+            throw e;
         }
     }
 
     @Override
-    public void editNews(News news) {
+    public void editNews(News news) throws SQLException {
         String query = "UPDATE news_db.news SET head=?, briefly=?, full=? WHERE id=?";
 
-        try (Connection connection = getConnection();
+        try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             prStmt.setInt(4, news.getId());
             prStmt.setString(1, news.getHead());
@@ -125,6 +115,7 @@ public class NewsServiceDbImpl implements NewsService {
             prStmt.executeUpdate();
         } catch (SQLException e) {
             logger.error(e);
+            throw e;
         }
     }
 }
