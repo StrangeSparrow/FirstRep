@@ -23,6 +23,13 @@ public class User {
         this.password = password;
     }
 
+    public User(int id, String login, String group, String password) {
+        this.id = id;
+        this.login = login;
+        this.group = group;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }

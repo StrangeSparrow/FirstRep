@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.Config;
+import com.mycorp.app.group.Group;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import com.mycorp.app.user.User;
@@ -69,6 +70,30 @@ public class AdminUserController {
         User user = new User(login, group, password);
         userService.addUser(user);
 
+        return Response.seeOther(uri).build();
+    }
+
+    @GET
+    @Path("/edit/{id}")
+    public void editUser(@PathParam("id") int id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, ServletException, IOException {
+        User user = userService.fetchSingleUser(id);
+
+        request.setAttribute("user", user);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/editUser.jsp");
+        requestDispatcher.forward(request, response);
+    }
+
+    @POST
+    @Path("/add_edit_user")
+    public Response addEditUser(@FormParam("id") int id,
+                                @FormParam("login") String login,
+                                @FormParam("group") String group,
+                                @FormParam("password") String password) throws SQLException {
+        User user = new User(id, login, group, password);
+        userService.editUser(user);
+
+        URI uri = UriBuilder.fromUri("admin/user/page/1").build();
         return Response.seeOther(uri).build();
     }
 }

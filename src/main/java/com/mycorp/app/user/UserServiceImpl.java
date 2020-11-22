@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User fetchSingleUser(int id) throws SQLException {
         User user = null;
-        String query = "SELECT u.id, u.login, g.name FROM news_db.users u LEFT OUTER JOIN news_db.group g ON u.group=g.id WHERE u.id=?";
+        String query = "SELECT u.id, u.login, g.name, u.password FROM news_db.users u LEFT OUTER JOIN news_db.group g ON u.group=g.id WHERE u.id=?";
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
 
             if (resultSet.next()) {
                 user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
+                user.setPassword(resultSet.getString(4));
             }
         } catch (SQLException e) {
             logger.error(e);
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUser(User user) throws SQLException {
-        String query = "UPDATE news_db.users SET login=?, password=?, group=? WHERE (id=?)";
+        String query = "UPDATE news_db.users SET login=?, password=?, users.group=? WHERE (id=?)";
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
