@@ -43,7 +43,7 @@
                                 for (String s : listGroup.get(i).getPermission()) {
                                     out.println(" | " + s.toUpperCase());
                                 }
-                                out.println("<p><a href=>Редактировать</a> <a href=../delete/" + listGroup.get(i).getId() + ">Удалить</a></p>");
+                                out.println("<p><a href=../edit/" + listGroup.get(i).getId() + ">Редактировать</a> <a href=../delete/" + listGroup.get(i).getId() + ">Удалить</a></p>");
                                 out.println("<hr class=\"line\"></td></tr>");
                             } else {
                                 out.println("</td></tr>");

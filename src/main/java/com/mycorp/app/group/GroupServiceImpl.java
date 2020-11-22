@@ -56,16 +56,29 @@ public class GroupServiceImpl implements GroupService {
     public Group fetchSingleGroup(int id) throws SQLException {
         Group group = null;
 
-        String query = "SELECT * FROM news_db.group WHERE id=?";
+        String query = "SELECT name FROM news_db.group WHERE id=?";
+
+        String queryPermission = "SELECT p.name FROM news_db.group g " +
+                "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
+                "JOIN news_db.permission p ON p.id=gp.permission WHERE g.id=?";
+
         try (Connection connection = dbManager.getConnection();
-             PreparedStatement prStmt = connection.prepareStatement(query)) {
+             PreparedStatement prStmt = connection.prepareStatement(query);
+             PreparedStatement prStmtPermission = connection.prepareStatement(queryPermission)) {
             prStmt.setInt(1, id);
             ResultSet resultSet = prStmt.executeQuery();
 
-            while (resultSet.next()) {
-                int index = resultSet.getInt(1);
-                String name = resultSet.getString(2);
-                group = new Group(id, name);
+            if (resultSet.next()) {
+                String name = resultSet.getString(1);
+
+                prStmtPermission.setInt(1, id);
+                ResultSet resultPermission = prStmtPermission.executeQuery();
+                List<String> permission = new ArrayList<>();
+                while (resultPermission.next()) {
+                    permission.add(resultPermission.getString(1));
+                }
+
+                group = new Group(id, name, permission);
             }
         } catch (SQLException e) {
             logger.error(e);
@@ -77,23 +90,16 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void addGroup(Group group) throws SQLException {
         String query = "INSERT INTO news_db.group (name) VALUES (?)";
-        String groupToPermission = "INSERT INTO news_db.group_to_permission (group_id, permission) VALUES (?, ?)";
 
         try (Connection connection = dbManager.getConnection();
-             PreparedStatement prStmt = connection.prepareStatement(query, new String[] {"id"});
-             PreparedStatement prStmtPermission = connection.prepareStatement(groupToPermission)) {
+             PreparedStatement prStmt = connection.prepareStatement(query, new String[] {"id"})) {
             prStmt.setString(1, group.getName());
             prStmt.executeUpdate();
 
             ResultSet genId = prStmt.getGeneratedKeys();
             if (genId.next()) {
                 int id = genId.getInt(1);
-
-                for (String permission : group.getPermission()) {
-                    prStmtPermission.setInt(1, id);
-                    prStmtPermission.setInt(2, Integer.parseInt(permission));
-                    prStmtPermission.executeUpdate();
-                }
+                addPermission(id, group.getPermission());
             }
 
         } catch (SQLException e) {
@@ -103,23 +109,66 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void editGroup(int id) {
+    public void editGroup(Group group) throws SQLException {
+        String query = "UPDATE news_db.group SET name=? WHERE (id=?)";
 
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement prStmt = connection.prepareStatement(query)) {
+            deletePermission(group.getId());
+
+            prStmt.setString(1, group.getName());
+            prStmt.setInt(2, group.getId());
+            prStmt.executeUpdate();
+
+            addPermission(group.getId(), group.getPermission());
+        } catch (SQLException e) {
+            logger.error(e);
+            throw e;
+        }
     }
 
     @Override
     public void deleteGroup(int id) throws SQLException {
-        String deletePermission = "DELETE FROM news_db.group_to_permission WHERE (group_id=?)";
         String deleteGroup = "DELETE FROM news_db.group WHERE (id=?)";
 
         try (Connection connection = dbManager.getConnection();
-             PreparedStatement prStmt = connection.prepareStatement(deletePermission);
              PreparedStatement prStmtDeleteGroup = connection.prepareStatement(deleteGroup)) {
+            deletePermission(id);
+
+            prStmtDeleteGroup.setInt(1, id);
+            prStmtDeleteGroup.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.error(e);
+            throw e;
+        }
+    }
+
+    private void deletePermission(int id) throws SQLException {
+        String deletePermission = "DELETE FROM news_db.group_to_permission WHERE (group_id=?)";
+
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement prStmt = connection.prepareStatement(deletePermission)) {
 
             prStmt.setInt(1, id);
             prStmt.executeUpdate();
-            prStmtDeleteGroup.setInt(1, id);
-            prStmtDeleteGroup.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e);
+            throw e;
+        }
+    }
+
+    private void addPermission(int id, List<String> permission) throws SQLException {
+        String groupToPermission = "INSERT INTO news_db.group_to_permission (group_id, permission) VALUES (?, ?)";
+
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement prStmtPermission = connection.prepareStatement(groupToPermission)) {
+
+            for (String perm : permission) {
+                prStmtPermission.setInt(1, id);
+                prStmtPermission.setInt(2, Integer.parseInt(perm));
+                prStmtPermission.executeUpdate();
+            }
 
         } catch (SQLException e) {
             logger.error(e);

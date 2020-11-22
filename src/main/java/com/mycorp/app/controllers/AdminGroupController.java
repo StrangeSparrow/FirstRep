@@ -69,7 +69,7 @@ public class AdminGroupController {
 
         List<String> permission = new ArrayList<>();
 
-        if (name == null) return Response.seeOther(uri).build();
+        if (name == null || name.isEmpty()) return Response.seeOther(uri).build();
 
         if (createG != null) permission.add("4");
         if (createN != null) permission.add("1");
@@ -92,6 +92,51 @@ public class AdminGroupController {
         groupService.deleteGroup(id);
 
         URI uri = UriBuilder.fromUri("admin/group/page/1").build();
+        return Response.seeOther(uri).build();
+    }
+
+    @GET
+    @Path("/edit/{id}")
+    public void editGroup(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws SQLException, ServletException, IOException {
+        Group group = groupService.fetchSingleGroup(id);
+
+        request.setAttribute("group", group);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/editGroup.jsp");
+        requestDispatcher.forward(request, response);
+    }
+
+    @POST
+    @Path("/add_edit_group")
+    public Response addEditGroup(@FormParam("create group") String createG,
+                                 @FormParam("edit group") String editG,
+                                 @FormParam("delete group") String deleteG,
+                                 @FormParam("create news") String createN,
+                                 @FormParam("edit news") String editN,
+                                 @FormParam("delete news") String deleteN,
+                                 @FormParam("create user") String createU,
+                                 @FormParam("edit user") String editU,
+                                 @FormParam("delete user") String deleteU,
+                                 @FormParam("id") int id,
+                                 @FormParam("name") String name) throws SQLException {
+        URI uri = UriBuilder.fromUri("admin/group/page/1").build();
+
+        List<String> permission = new ArrayList<>();
+
+        if (name == null || name.isEmpty()) return Response.seeOther(uri).build();
+
+        if (createG != null) permission.add("4");
+        if (createN != null) permission.add("1");
+        if (createU != null) permission.add("7");
+        if (editG != null) permission.add("5");
+        if (editN != null) permission.add("2");
+        if (editU != null) permission.add("8");
+        if (deleteG != null) permission.add("6");
+        if (deleteN != null) permission.add("3");
+        if (deleteU != null) permission.add("9");
+
+        groupService.editGroup(new Group(id, name, permission));
+
         return Response.seeOther(uri).build();
     }
 }
