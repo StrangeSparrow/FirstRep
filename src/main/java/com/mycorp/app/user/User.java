@@ -4,11 +4,17 @@ public class User {
     private int id;
     private String login;
     private String group;
+    private String password;
 
     public User(int id, String login, String group) {
         this.id = id;
         this.login = login;
         this.group = group;
+    }
+
+    public User(int id, String login) {
+        this.id = id;
+        this.login = login;
     }
 
     public int getId() {
@@ -33,5 +39,13 @@ public class User {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
