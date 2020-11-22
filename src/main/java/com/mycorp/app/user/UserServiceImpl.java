@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(User user) throws SQLException {
-        String query = "INSERT INTO news_db.users (login, password, group) VALUES (?, ?, ?)";
+        String query = "INSERT INTO news_db.users (login, password, users.group) VALUES (?, ?, ?)";
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
@@ -100,7 +100,8 @@ public class UserServiceImpl implements UserService {
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
-
+            prStmt.setInt(1, id);
+            prStmt.executeUpdate();
         } catch (SQLException e) {
             logger.error(e);
             throw e;

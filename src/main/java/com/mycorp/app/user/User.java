@@ -17,6 +17,12 @@ public class User {
         this.login = login;
     }
 
+    public User(String login, String group, String password) {
+        this.login = login;
+        this.group = group;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }

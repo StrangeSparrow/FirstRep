@@ -14,8 +14,8 @@
         <table align="center">
             <tr><td width="20%"></td>
             <td>
-
-                <hr class="line">
+                  <jsp:include page="addUser.jsp" />
+                  <hr class="line">
             </td><td width="20%"></td></tr>
 
             <tr><td width="20%"></td>
@@ -38,7 +38,8 @@
                             out.println("<tr style=\"height: 30px;\">" +
                                         "<td style=\"width: 10%; height: 18px; text-align: center;\">" + listUser.get(i).getId() + "</td>" +
                                         "<td style=\"width: 30%; height: 18px; text-align: left;\">" + listUser.get(i).getLogin() + "</td>" +
-                                        "<td style=\"width: 60%; height: 18px; text-align: right;\">" + listUser.get(i).getGroup() + "</td></tr>");
+                                        "<td style=\"width: 60%; height: 18px; text-align: right;\">" + listUser.get(i).getGroup());
+                            out.println("<p><a href=../edit/" + listUser.get(i).getId() + ">Редактировать</a><a href=../delete/" + listUser.get(i).getId() + ">Удалить</a></p>" + "<hr class=\"line\"></td></tr>");
                         }
                     %>
                 </tbody>
