@@ -13,7 +13,6 @@ public class NewsServiceDbImpl implements NewsService {
 
     public NewsServiceDbImpl() throws SQLException {
         try {
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             dbManager = new DbManager();
         } catch (SQLException e) {
             logger.error(e);
@@ -25,7 +24,8 @@ public class NewsServiceDbImpl implements NewsService {
     public List<News> fetchNews() throws SQLException {
         List<News> newsList = new ArrayList<>();
 
-        String query = "SELECT * FROM news_db.news ORDER BY id DESC";
+        String query = "SELECT n.id, n.head, n.briefly, n.full, u.login " +
+                "FROM news_db.news n LEFT OUTER JOIN news_db.users u ON n.author=u.id ORDER BY n.id DESC";
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             ResultSet resultSet = prStmt.executeQuery();
@@ -35,8 +35,9 @@ public class NewsServiceDbImpl implements NewsService {
                 String head = resultSet.getString(2);
                 String briefly = resultSet.getString(3);
                 String full = resultSet.getString(4);
+                String author = resultSet.getString(5);
 
-                newsList.add(new News(head, briefly, full, id));
+                newsList.add(new News(head, briefly, full, id, author));
             }
         } catch (SQLException e) {
             logger.error(e);
@@ -47,7 +48,7 @@ public class NewsServiceDbImpl implements NewsService {
 
     @Override
     public News fetchSingleNews(int id) throws SQLException {
-        String query = "SELECT * FROM news_db.news WHERE id=?";
+        String query = "SELECT n.id, n.head, n.briefly, n.full, u.login FROM news_db.news n INNER JOIN news_db.users u ON n.id=?";
         News news = null;
 
         try (Connection connection = dbManager.getConnection();
@@ -60,7 +61,8 @@ public class NewsServiceDbImpl implements NewsService {
                 String head = resultSet.getString(2);
                 String briefly = resultSet.getString(3);
                 String full = resultSet.getString(4);
-                news = new News(head, briefly, full, index);
+                String author = resultSet.getString(5);
+                news = new News(head, briefly, full, index, author);
             }
         } catch (SQLException e) {
             logger.error(e);

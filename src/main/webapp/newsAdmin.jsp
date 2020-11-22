@@ -6,7 +6,7 @@
 
 <html>
     <head>
-        <meta charset="UTF-8" http-equiv="Cache-Control" content="no-cache">
+        <meta charset="UTF-8">
         <title>Admin News</title>
     </head>
     <body>
