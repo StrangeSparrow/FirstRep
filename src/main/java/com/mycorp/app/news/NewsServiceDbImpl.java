@@ -48,7 +48,7 @@ public class NewsServiceDbImpl implements NewsService {
 
     @Override
     public News fetchSingleNews(int id) throws SQLException {
-        String query = "SELECT n.id, n.head, n.briefly, n.full, u.login FROM news_db.news n INNER JOIN news_db.users u ON n.id=?";
+        String query = "SELECT n.id, n.head, n.briefly, n.full, u.login FROM news_db.news n LEFT OUTER JOIN news_db.users u ON n.author=u.id WHERE n.id=?";
         News news = null;
 
         try (Connection connection = dbManager.getConnection();
