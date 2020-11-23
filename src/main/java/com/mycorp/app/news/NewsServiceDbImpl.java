@@ -1,21 +1,23 @@
 package com.mycorp.app.news;
 
 import com.mycorp.app.dao.DbManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewsServiceDbImpl implements NewsService {
-    private final static Logger logger = Logger.getLogger(NewsServiceDbImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(NewsServiceDbImpl.class);
     private final DbManager dbManager;
 
     public NewsServiceDbImpl() throws SQLException {
         try {
             dbManager = new DbManager();
+            logger.info("Db manager for News serviceDbImpl has created");
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
     }
@@ -30,6 +32,8 @@ public class NewsServiceDbImpl implements NewsService {
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             ResultSet resultSet = prStmt.executeQuery();
 
+            logger.info("Connection in method fetchNews()");
+
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String head = resultSet.getString(2);
@@ -40,7 +44,7 @@ public class NewsServiceDbImpl implements NewsService {
                 newsList.add(new News(head, briefly, full, id, author));
             }
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
         return newsList;
@@ -56,6 +60,8 @@ public class NewsServiceDbImpl implements NewsService {
             prStmt.setInt(1, id);
             ResultSet resultSet = prStmt.executeQuery();
 
+            logger.info("Connection in method fetchSingleNews()");
+
             if (resultSet.next()) {
                 int index = resultSet.getInt(1);
                 String head = resultSet.getString(2);
@@ -65,7 +71,7 @@ public class NewsServiceDbImpl implements NewsService {
                 news = new News(head, briefly, full, index, author);
             }
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
         return news;
@@ -81,9 +87,11 @@ public class NewsServiceDbImpl implements NewsService {
             prStmt.setString(2, news.getBriefly());
             prStmt.setString(3, news.getFull());
 
+            logger.info("Connection in method addNews()");
+
             prStmt.executeUpdate();
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
     }
@@ -96,8 +104,10 @@ public class NewsServiceDbImpl implements NewsService {
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             prStmt.setInt(1, id);
             prStmt.executeUpdate();
+
+            logger.info("Connection in method deleteNews()");
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
     }
@@ -113,9 +123,11 @@ public class NewsServiceDbImpl implements NewsService {
             prStmt.setString(2, news.getBriefly());
             prStmt.setString(3, news.getFull());
 
+            logger.info("Connection in method editNews()");
+
             prStmt.executeUpdate();
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
     }
