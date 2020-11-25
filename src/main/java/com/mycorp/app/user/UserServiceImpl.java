@@ -12,14 +12,14 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
-    private DbManager dbManager;
+    private final DbManager dbManager;
 
     public UserServiceImpl() throws SQLException {
         this.dbManager = new DbManager();
     }
 
     @Override
-    public List<User> fetchUser() throws SQLException {
+    public List<User> fetchUsers() throws SQLException {
         List<User> users = new ArrayList<>();
         String query = "SELECT u.id, u.login, g.name FROM news_db.users u LEFT OUTER JOIN news_db.group g ON u.group=g.id";
 

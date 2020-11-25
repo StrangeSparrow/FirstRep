@@ -1,7 +1,6 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.Config;
-import com.mycorp.app.group.Group;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import com.mycorp.app.user.User;
@@ -39,7 +38,7 @@ public class AdminUserController {
     public void getUsersPage(@Context HttpServletResponse response, @Context HttpServletRequest request, @PathParam("id") int id) throws ServletException, IOException, SQLException {
         int sizePage = Config.getInstance().getPageSize();
 
-        Paginator groupPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(userService.fetchUser()).setSize(sizePage).build();
+        Paginator groupPaginator = new PaginatorBuilder().setCurrentPage(1).setDataList(userService.fetchUsers()).setSize(sizePage).build();
         groupPaginator.setCurrentPage(id);
 
         request.setAttribute("users", groupPaginator);

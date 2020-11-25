@@ -1,1 +1,1 @@
-INSERT INTO `group` (`id`, `name`) VALUES ('1', 'admin');
+INSERT INTO `group` (`id`, `name`) VALUES ('1', 'Administrator');

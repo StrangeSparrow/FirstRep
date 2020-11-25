@@ -6,3 +6,6 @@ ALTER TABLE `news_db`.`group_to_permission`
 ADD CONSTRAINT `group`
   FOREIGN KEY (`group_id`)
   REFERENCES `news_db`.`group` (`id`);
+
+ALTER TABLE `news_db`.`permission`
+ADD COLUMN `description` TINYTEXT CHARACTER SET 'utf8' NULL AFTER `name`;
