@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.mycorp.app.paginator.Paginator" %>
 <%@ page import="com.mycorp.app.paginator.PaginatorImpl" %>
+<%@ page import="com.mycorp.app.permission.Permission" %>
 <%@ page import="com.mycorp.app.group.Group" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -40,8 +41,8 @@
                                         "<td style=\"width: 30%; height: 18px; text-align: left;\">" + listGroup.get(i).getName() + "</td>" +
                                         "<td style=\"width: 60%; height: 18px; text-align: right;\">");
                             if (listGroup.get(i).getPermission() != null) {
-                                for (String s : listGroup.get(i).getPermission()) {
-                                    out.println(" | " + s.toUpperCase());
+                                for (Permission perm : listGroup.get(i).getPermission()) {
+                                    out.println("<p>" + perm.getDescription());
                                 }
                                 out.println("<p><a href=../edit/" + listGroup.get(i).getId() + ">Редактировать</a> <a href=../delete/" + listGroup.get(i).getId() + ">Удалить</a></p>");
                                 out.println("<hr class=\"line\"></td></tr>");

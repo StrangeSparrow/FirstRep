@@ -22,7 +22,7 @@ import java.sql.SQLException;
 
 @Path("/admin/user")
 public class AdminUserController {
-    private final static Logger logger = Logger.getLogger(AdminGroupController.class);
+    private final static Logger logger = Logger.getLogger(AdminUserController.class);
     private static UserService userService;
 
     static {

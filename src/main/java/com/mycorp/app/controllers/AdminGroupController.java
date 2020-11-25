@@ -6,6 +6,9 @@ import com.mycorp.app.group.GroupService;
 import com.mycorp.app.group.GroupServiceImpl;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
+import com.mycorp.app.permission.Permission;
+import com.mycorp.app.permission.PermissionService;
+import com.mycorp.app.permission.PermissionServiceImpl;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -54,34 +57,20 @@ public class AdminGroupController {
     @POST
     @Path("/add")
     @Produces(MediaType.TEXT_HTML)
-    public Response addGroup(@FormParam("create group") String createG,
-                           @FormParam("edit group") String editG,
-                           @FormParam("delete group") String deleteG,
-                           @FormParam("create news") String createN,
-                           @FormParam("edit news") String editN,
-                           @FormParam("delete news") String deleteN,
-                           @FormParam("create user") String createU,
-                           @FormParam("edit user") String editU,
-                           @FormParam("delete user") String deleteU,
+    public Response addGroup(@FormParam("permission[]") List <Integer> permissions,
                            @FormParam("name") String name) throws SQLException {
 
         URI uri = UriBuilder.fromUri("admin/group/page/1").build();
 
-        List<String> permission = new ArrayList<>();
-
         if (name == null || name.isEmpty()) return Response.seeOther(uri).build();
 
-        if (createG != null) permission.add("4");
-        if (createN != null) permission.add("1");
-        if (createU != null) permission.add("7");
-        if (editG != null) permission.add("5");
-        if (editN != null) permission.add("2");
-        if (editU != null) permission.add("8");
-        if (deleteG != null) permission.add("6");
-        if (deleteN != null) permission.add("3");
-        if (deleteU != null) permission.add("9");
+        List<Permission> permissionList = new ArrayList<>();
+        PermissionService ps = new PermissionServiceImpl();
+        for (int id : permissions) {
+            permissionList.add(ps.fetchSinglePermission(id));
+        }
 
-        groupService.addGroup(new Group(name, permission));
+        groupService.addGroup(new Group(name, permissionList));
 
         return Response.seeOther(uri).build();
     }
@@ -108,34 +97,20 @@ public class AdminGroupController {
 
     @POST
     @Path("/add_edit_group")
-    public Response addEditGroup(@FormParam("create group") String createG,
-                                 @FormParam("edit group") String editG,
-                                 @FormParam("delete group") String deleteG,
-                                 @FormParam("create news") String createN,
-                                 @FormParam("edit news") String editN,
-                                 @FormParam("delete news") String deleteN,
-                                 @FormParam("create user") String createU,
-                                 @FormParam("edit user") String editU,
-                                 @FormParam("delete user") String deleteU,
+    public Response addEditGroup(@FormParam("permission[]") List<Integer> permissions,
                                  @FormParam("id") int id,
                                  @FormParam("name") String name) throws SQLException {
         URI uri = UriBuilder.fromUri("admin/group/page/1").build();
 
-        List<String> permission = new ArrayList<>();
-
         if (name == null || name.isEmpty()) return Response.seeOther(uri).build();
 
-        if (createG != null) permission.add("4");
-        if (createN != null) permission.add("1");
-        if (createU != null) permission.add("7");
-        if (editG != null) permission.add("5");
-        if (editN != null) permission.add("2");
-        if (editU != null) permission.add("8");
-        if (deleteG != null) permission.add("6");
-        if (deleteN != null) permission.add("3");
-        if (deleteU != null) permission.add("9");
+        List<Permission> permissionList = new ArrayList<>();
+        PermissionService ps = new PermissionServiceImpl();
+        for (int idPerm : permissions) {
+            permissionList.add(ps.fetchSinglePermission(idPerm));
+        }
 
-        groupService.editGroup(new Group(id, name, permission));
+        groupService.editGroup(new Group(id, name, permissionList));
 
         return Response.seeOther(uri).build();
     }

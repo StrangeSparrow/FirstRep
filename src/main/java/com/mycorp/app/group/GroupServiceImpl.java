@@ -1,6 +1,7 @@
 package com.mycorp.app.group;
 
 import com.mycorp.app.dao.DbManager;
+import com.mycorp.app.permission.Permission;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -23,7 +24,7 @@ public class GroupServiceImpl implements GroupService {
         List<Group> groupList = new ArrayList<>();
 
         String queryIdAndName = "SELECT * FROM news_db.group";
-        String queryPermission = "SELECT p.name FROM news_db.group g " +
+        String queryPermission = "SELECT p.* FROM news_db.group g " +
                 "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
                 "JOIN news_db.permission p ON p.id=gp.permission WHERE g.id=?";
 
@@ -38,9 +39,13 @@ public class GroupServiceImpl implements GroupService {
 
                 prStmtPermission.setInt(1, id);
                 ResultSet resultPermission = prStmtPermission.executeQuery();
-                List<String> permission = new ArrayList<>();
+                List<Permission> permission = new ArrayList<>();
                 while (resultPermission.next()) {
-                    permission.add(resultPermission.getString(1));
+                    int index = resultPermission.getInt(1);
+                    String namePerm = resultPermission.getString(2);
+                    String description = resultPermission.getString(3);
+
+                    permission.add(new Permission(index, namePerm, description));
                 }
 
                 groupList.add(new Group(id, name, permission));
@@ -58,7 +63,7 @@ public class GroupServiceImpl implements GroupService {
 
         String query = "SELECT name FROM news_db.group WHERE id=?";
 
-        String queryPermission = "SELECT p.name FROM news_db.group g " +
+        String queryPermission = "SELECT p.* FROM news_db.group g " +
                 "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
                 "JOIN news_db.permission p ON p.id=gp.permission WHERE g.id=?";
 
@@ -73,9 +78,13 @@ public class GroupServiceImpl implements GroupService {
 
                 prStmtPermission.setInt(1, id);
                 ResultSet resultPermission = prStmtPermission.executeQuery();
-                List<String> permission = new ArrayList<>();
+                List<Permission> permission = new ArrayList<>();
                 while (resultPermission.next()) {
-                    permission.add(resultPermission.getString(1));
+                    int index = resultPermission.getInt(1);
+                    String namePerm = resultPermission.getString(2);
+                    String description = resultPermission.getString(3);
+
+                    permission.add(new Permission(index, namePerm, description));
                 }
 
                 group = new Group(id, name, permission);
@@ -158,15 +167,15 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
-    private void addPermission(int id, List<String> permission) throws SQLException {
+    private void addPermission(int id, List<Permission> permission) throws SQLException {
         String groupToPermission = "INSERT INTO news_db.group_to_permission (group_id, permission) VALUES (?, ?)";
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmtPermission = connection.prepareStatement(groupToPermission)) {
 
-            for (String perm : permission) {
+            for (Permission perm : permission) {
                 prStmtPermission.setInt(1, id);
-                prStmtPermission.setInt(2, Integer.parseInt(perm));
+                prStmtPermission.setInt(2, perm.getId());
                 prStmtPermission.executeUpdate();
             }
 

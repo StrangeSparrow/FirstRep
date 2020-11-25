@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.mycorp.app.permission.*" %>
+<%@ page import="java.util.List" %>
 
 <form accept-charset="UTF-8" method="post"><fildset>
     <legend><h3>Добавить группу</h3></legend>
@@ -11,42 +13,17 @@
             </td>
             <td style="width: 70%;"><input type="text" name="name" size="30" /></td>
         </tr>
-        <tr>
-            <td style="width: 30%;"><label>Права группы</label></td>
-            <td style="width: 70%;"><input type="checkbox" name="create group" size="100" />Создание групп</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" name="edit group" size="100" />Редактирование групп</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" name="delete group" size="100" />Удаление групп</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" name="create news" size="100" />Создание новостей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" name="edit news" size="100" />Редактирование новостей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" name="delete news" size="100" />Удаление новостей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" name="create user" size="100" />Добавление пользователей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" name="edit user" size="100" />Редактирование пользователей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" name="delete user" size="100" />Удаление пользователей</td>
-        </tr>
+        <%
+            PermissionService permServ = new PermissionServiceImpl();
+            List<Permission> permissionList = permServ.fetchPermissions();
+
+            for (Permission permission : permissionList) {
+                out.println("<tr>");
+                out.println("<td style=\"width: 30%;\"><label></label></td>");
+                out.println("<td style=\"width: 70%;\"><input type=\"checkbox\" value=\"" + permission.getId() + "\" name=\"permission[]\" id=" + permission.getId() + "size=\"100\" />" + permission.getDescription() + "</td>");
+                out.println("</tr>");
+            }
+        %>
         </tbody>
     </table>
     <p><input type="submit" value="Добавить" formaction="../add" /></p>

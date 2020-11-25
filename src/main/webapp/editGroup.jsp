@@ -1,5 +1,7 @@
 <%@ page import="com.mycorp.app.group.Group" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.mycorp.app.permission.*" %>
+<%@ page import="java.util.List" %>
 
 <html>
     <head>
@@ -20,42 +22,25 @@
             </td>
             <td style="width: 70%;"><input type="text" name="name" size="30" value="<% out.println(group.getName()); %>" /></td>
         </tr>
-        <tr>
-            <td style="width: 30%;"><label>Права группы</label></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("create group")) out.println("checked=\"checked\""); %> name="create group" size="100" />Создание групп</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("edit group")) out.println("checked=\"checked\""); %> name="edit group" size="100" />Редактирование групп</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("delete group")) out.println("checked=\"checked\""); %> name="delete group" size="100" />Удаление групп</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("create news")) out.println("checked=\"checked\""); %> name="create news" size="100" />Создание новостей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("edit news")) out.println("checked=\"checked\""); %> name="edit news" size="100" />Редактирование новостей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("delete news")) out.println("checked=\"checked\""); %> name="delete news" size="100" />Удаление новостей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("create user")) out.println("checked=\"checked\""); %> name="create user" size="100" />Добавление пользователей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("edit user")) out.println("checked=\"checked\""); %> name="edit user" size="100" />Редактирование пользователей</td>
-        </tr>
-        <tr>
-            <td style="width: 30%;"></td>
-            <td style="width: 70%;"><input type="checkbox" <% if (group.getPermission().contains("delete user")) out.println("checked=\"checked\""); %> name="delete user" size="100" />Удаление пользователей</td>
-        </tr>
+
+        <%
+            List<Permission> permissionList = new  PermissionServiceImpl().fetchPermissions();
+            List<Permission> groupPermission = group.getPermission();
+
+            for (Permission permission : permissionList) {
+                String check = "";
+                if (groupPermission.contains(permission))
+                    check = "checked=\"checked\"";
+
+                out.println("<tr>");
+                out.println("<td style=\"width: 30%;\"><label></label></td>");
+                out.println("<td style=\"width: 70%;\"><input type=\"checkbox\"" + check + " value=\"" + permission.getId() +
+                            "\" name=\"permission[]\" id=" + permission.getId() +
+                            "size=\"100\" />" + permission.getDescription() + "</td>");
+                out.println("</tr>");
+            }
+        %>
+
         </tbody>
     </table>
     <input type="hidden" value="<%out.print(group.getId());%>" name="id">
