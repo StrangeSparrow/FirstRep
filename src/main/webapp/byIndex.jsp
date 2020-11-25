@@ -1,4 +1,4 @@
-<%@ page import="com.mycorp.app.News" %>
+<%@ page import="com.mycorp.app.news.News" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -14,7 +14,11 @@
         News news = (News)request.getAttribute("news");
 
         out.println("<h2>" + news.getHead() + "</h2>");
-        out.println("<p>" + news.getFull() + "</p>");
+        out.println("<p align=\"justify\">" + news.getFull() + "</p>");
+        if (news.getAuthor() != null) {
+            out.println("<br>");
+            out.println("<p align=\"right\"><i>Автор: " + news.getAuthor() + "</i></p>");
+        }
     %>
     </td>
     <td width="20%"></td>

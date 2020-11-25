@@ -1,2 +1,0 @@
-ALTER TABLE `users`
-ADD COLUMN `role` VARCHAR(20) CHARACTER SET 'utf8' NOT NULL AFTER `password`;

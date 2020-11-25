@@ -1,5 +1,7 @@
-package com.mycorp.app;
+package com.mycorp.app.news;
 
+import com.mycorp.app.Config;
+import com.mycorp.app.Constants;
 import org.apache.log4j.Logger;
 
 import java.io.*;

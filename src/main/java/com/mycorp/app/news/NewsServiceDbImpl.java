@@ -1,22 +1,23 @@
-package com.mycorp.app;
+package com.mycorp.app.news;
 
 import com.mycorp.app.dao.DbManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewsServiceDbImpl implements NewsService {
-    private final static Logger logger = Logger.getLogger(NewsServiceDbImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(NewsServiceDbImpl.class);
     private final DbManager dbManager;
 
     public NewsServiceDbImpl() throws SQLException {
         try {
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             dbManager = new DbManager();
+            logger.info("Db manager for News serviceDbImpl has created");
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
     }
@@ -25,21 +26,25 @@ public class NewsServiceDbImpl implements NewsService {
     public List<News> fetchNews() throws SQLException {
         List<News> newsList = new ArrayList<>();
 
-        String query = "SELECT * FROM news_db.news ORDER BY id DESC";
+        String query = "SELECT n.id, n.head, n.briefly, n.full, u.login " +
+                "FROM news_db.news n LEFT OUTER JOIN news_db.users u ON n.author=u.id ORDER BY n.id DESC";
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             ResultSet resultSet = prStmt.executeQuery();
+
+            logger.info("Connection in method fetchNews()");
 
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String head = resultSet.getString(2);
                 String briefly = resultSet.getString(3);
                 String full = resultSet.getString(4);
+                String author = resultSet.getString(5);
 
-                newsList.add(new News(head, briefly, full, id));
+                newsList.add(new News(head, briefly, full, id, author));
             }
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
         return newsList;
@@ -47,7 +52,7 @@ public class NewsServiceDbImpl implements NewsService {
 
     @Override
     public News fetchSingleNews(int id) throws SQLException {
-        String query = "SELECT * FROM news_db.news WHERE id=?";
+        String query = "SELECT n.id, n.head, n.briefly, n.full, u.login FROM news_db.news n LEFT OUTER JOIN news_db.users u ON n.author=u.id WHERE n.id=?";
         News news = null;
 
         try (Connection connection = dbManager.getConnection();
@@ -55,15 +60,18 @@ public class NewsServiceDbImpl implements NewsService {
             prStmt.setInt(1, id);
             ResultSet resultSet = prStmt.executeQuery();
 
+            logger.info("Connection in method fetchSingleNews()");
+
             if (resultSet.next()) {
                 int index = resultSet.getInt(1);
                 String head = resultSet.getString(2);
                 String briefly = resultSet.getString(3);
                 String full = resultSet.getString(4);
-                news = new News(head, briefly, full, index);
+                String author = resultSet.getString(5);
+                news = new News(head, briefly, full, index, author);
             }
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
         return news;
@@ -79,9 +87,11 @@ public class NewsServiceDbImpl implements NewsService {
             prStmt.setString(2, news.getBriefly());
             prStmt.setString(3, news.getFull());
 
+            logger.info("Connection in method addNews()");
+
             prStmt.executeUpdate();
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
     }
@@ -94,8 +104,10 @@ public class NewsServiceDbImpl implements NewsService {
              PreparedStatement prStmt = connection.prepareStatement(query)) {
             prStmt.setInt(1, id);
             prStmt.executeUpdate();
+
+            logger.info("Connection in method deleteNews()");
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
     }
@@ -111,9 +123,11 @@ public class NewsServiceDbImpl implements NewsService {
             prStmt.setString(2, news.getBriefly());
             prStmt.setString(3, news.getFull());
 
+            logger.info("Connection in method editNews()");
+
             prStmt.executeUpdate();
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error in class NewsServiceDbImpl", e);
             throw e;
         }
     }

@@ -1,4 +1,4 @@
-package com.mycorp.app;
+package com.mycorp.app.news;
 
 import java.sql.SQLException;
 import java.util.List;

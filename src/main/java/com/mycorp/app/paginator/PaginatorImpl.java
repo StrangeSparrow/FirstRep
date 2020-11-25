@@ -1,4 +1,4 @@
-package com.mycorp.app;
+package com.mycorp.app.paginator;
 
 import java.util.List;
 
