@@ -24,7 +24,7 @@ import java.sql.SQLException;
 
 @Path("/admin")
 public class AdminController {
-    private final static Logger logger = Logger.getLogger(NewsController.class);
+    private final static Logger logger = Logger.getLogger(AdminController.class);
 
     private static NewsService newsService = null;
     static {

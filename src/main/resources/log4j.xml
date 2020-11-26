@@ -3,7 +3,7 @@
 <log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
     
     <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
-        <param name="maxFileSize" value="1MB"/>
+        <param name="maxFileSize" value="100KB"/>
         <param name="maxBackupIndex" value="5"/>
         <param name="file" value="webapps/log4j/log4j_servlet.log"/>
         <layout class="org.apache.log4j.PatternLayout">
