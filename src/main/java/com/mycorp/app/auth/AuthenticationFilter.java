@@ -79,6 +79,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
+            prStmt.setString(1, token);
             prStmt.executeQuery();
 
             ResultSet resultSet = prStmt.getResultSet();
