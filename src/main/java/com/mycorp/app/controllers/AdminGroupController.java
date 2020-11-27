@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.Config;
+import com.mycorp.app.auth.Secured;
 import com.mycorp.app.group.Group;
 import com.mycorp.app.group.GroupService;
 import com.mycorp.app.group.GroupServiceImpl;
@@ -26,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Secured
 @Path("/admin/group")
 public class AdminGroupController {
     private final static Logger logger = Logger.getLogger(AdminGroupController.class);

@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.*;
+import com.mycorp.app.auth.Secured;
 import com.mycorp.app.news.News;
 import com.mycorp.app.news.NewsService;
 import com.mycorp.app.news.NewsServiceDbImpl;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 
+@Secured
 @Path("/admin")
 public class AdminController {
     private final static Logger logger = Logger.getLogger(AdminController.class);

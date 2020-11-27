@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.Config;
+import com.mycorp.app.auth.Secured;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import com.mycorp.app.user.User;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 
+@Secured
 @Path("/admin/user")
 public class AdminUserController {
     private final static Logger logger = Logger.getLogger(AdminUserController.class);
