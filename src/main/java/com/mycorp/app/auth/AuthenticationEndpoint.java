@@ -38,14 +38,9 @@ public class AuthenticationEndpoint {
                                      @FormParam("password") String password, @Context HttpServletRequest request) {
 
         try {
-
-            // Authenticate the user using the credentials provided
             authenticate(username, password);
 
-            // Issue a token for the user
             String token = issueToken(username);
-
-            // Return the token on the response
 
             URI uri = UriBuilder.fromUri("/my-app-3.5/admin.html").build();
             NewCookie cookieToken = new NewCookie(HttpHeaders.AUTHORIZATION, "Bearer" + " " + token);
@@ -57,8 +52,6 @@ public class AuthenticationEndpoint {
     }
 
     private void authenticate(String username, String password) throws Exception {
-        // Authenticate against a database, LDAP, file or whatever
-        // Throw an Exception if the credentials are invalid
         String query = "SELECT * FROM news_db.users u WHERE u.login=? AND u.password=?";
 
         try (Connection connection = dbManager.getConnection();
@@ -80,9 +73,6 @@ public class AuthenticationEndpoint {
     }
 
     private String issueToken(String username) {
-        // Issue a token (can be a random String persisted to a database or a JWT token)
-        // The issued token must be associated to a user
-        // Return the issued token
         String query = "UPDATE news_db.users SET auth_token=? WHERE (id=?)";
         String token = RandomStringUtils.random(20, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 
@@ -95,7 +85,6 @@ public class AuthenticationEndpoint {
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
-
         return token;
     }
 }
