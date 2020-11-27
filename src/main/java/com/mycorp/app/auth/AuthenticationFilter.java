@@ -53,7 +53,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             abortWithUnauthorized(requestContext);
             return;
         }
-        
+
         String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
 
         try {
