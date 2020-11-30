@@ -2,11 +2,12 @@ package com.mycorp.app.auth;
 
 import com.mycorp.app.dao.DbManager;
 import com.mycorp.app.user.User;
+import com.mycorp.app.user.UserService;
+import com.mycorp.app.user.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Priority;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -19,7 +20,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,6 +40,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
 
+    UserService userService;
     private User user;
 
     @Override
@@ -69,8 +70,13 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
 
         if (user != null) {
+            try {
+                userService = new UserServiceImpl();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
             boolean isSecure = requestContext.getSecurityContext().isSecure();
-            Set<String> permissions = getRolesUser(user.getId());
+            Set<String> permissions = userService.getRolesUser(user.getId());
             requestContext.setSecurityContext(new Authorizer(permissions, user, isSecure));
             requestContext.setProperty("permissions", permissions);
         }
@@ -85,29 +91,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         requestContext.abortWith(
                 Response.status(Response.Status.UNAUTHORIZED).header(HttpHeaders.WWW_AUTHENTICATE, AUTHENTICATION_SCHEME + " realm=\"" + REALM + "\"")
                         .build());
-    }
-
-    private Set<String> getRolesUser(int idUser) {
-        String query = "SELECT p.name FROM news_db.users u " +
-                "JOIN news_db.group g ON g.id=u.group " +
-                "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
-                "JOIN news_db.permission p ON p.id=gp.permission WHERE u.id=?";
-
-        Set<String> roles = new HashSet<>();
-
-        try (Connection connection = dbManager.getConnection();
-             PreparedStatement prStmt = connection.prepareStatement(query)) {
-            prStmt.setInt(1, idUser);
-            prStmt.executeQuery();
-            ResultSet resultSet = prStmt.getResultSet();
-
-            while (resultSet.next()) {
-                roles.add(resultSet.getString(1));
-            }
-        } catch (SQLException e) {
-            logger.error("Error get roles in filter");
-        }
-        return roles;
     }
 
     private void validateToken(String token) throws Exception {

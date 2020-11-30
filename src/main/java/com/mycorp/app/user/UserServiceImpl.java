@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class UserServiceImpl implements UserService {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
@@ -107,5 +109,29 @@ public class UserServiceImpl implements UserService {
             logger.error(e);
             throw e;
         }
+    }
+
+    @Override
+    public Set<String> getRolesUser(int id) {
+        String query = "SELECT p.name FROM news_db.users u " +
+                "JOIN news_db.group g ON g.id=u.group " +
+                "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
+                "JOIN news_db.permission p ON p.id=gp.permission WHERE u.id=?";
+
+        Set<String> roles = new HashSet<>();
+
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement prStmt = connection.prepareStatement(query)) {
+            prStmt.setInt(1, id);
+            prStmt.executeQuery();
+            ResultSet resultSet = prStmt.getResultSet();
+
+            while (resultSet.next()) {
+                roles.add(resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            logger.error("Error get roles in filter");
+        }
+        return roles;
     }
 }

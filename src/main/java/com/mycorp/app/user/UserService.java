@@ -2,6 +2,7 @@ package com.mycorp.app.user;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
     List<User> fetchUsers() throws SQLException;
@@ -9,4 +10,5 @@ public interface UserService {
     void addUser(User user) throws SQLException;
     void editUser(User user) throws SQLException;
     void deleteUser(int id) throws SQLException;
+    Set<String> getRolesUser(int id);
 }
