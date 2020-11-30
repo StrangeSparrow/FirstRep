@@ -7,9 +7,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,7 +37,7 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.TEXT_HTML)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response authenticateUser(@FormParam("username") String username,
-                                     @FormParam("password") String password, @Context HttpServletRequest request) {
+                                     @FormParam("password") String password) {
 
         try {
             authenticate(username, password);
@@ -63,7 +65,7 @@ public class AuthenticationEndpoint {
             ResultSet resultSet = prStmt.getResultSet();
 
             if (resultSet.next()) {
-                user = new User(resultSet.getInt(1), resultSet.getString(2));
+                user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(4), resultSet.getString(3));
                 return;
             } else {
                 logger.error("User not found {}", username);

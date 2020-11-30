@@ -10,6 +10,7 @@ import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import org.apache.log4j.Logger;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import java.net.URI;
 import java.sql.SQLException;
 
 @Secured
+@RolesAllowed("edit_news")
 @Path("/admin")
 public class AdminController {
     private final static Logger logger = Logger.getLogger(AdminController.class);

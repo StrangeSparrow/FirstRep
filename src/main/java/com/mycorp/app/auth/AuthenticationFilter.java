@@ -1,6 +1,7 @@
 package com.mycorp.app.auth;
 
 import com.mycorp.app.dao.DbManager;
+import com.mycorp.app.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Secured
 @Provider
@@ -35,6 +38,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             logger.error("Error AuthenticationFilter. DbManager Error");
         }
     }
+
+    private User user;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -61,6 +66,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         } catch (Exception e) {
             abortWithUnauthorized(requestContext);
         }
+
+        boolean isSecure = requestContext.getSecurityContext().isSecure();
+        if (user != null)
+            requestContext.setSecurityContext(new Authorizer(getRolesUser(user.getId()), user, isSecure));
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
@@ -74,6 +83,29 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                         .build());
     }
 
+    private Set<String> getRolesUser(int idUser) {
+        String query = "SELECT p.name FROM news_db.users u " +
+                "JOIN news_db.group g ON g.id=u.group " +
+                "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
+                "JOIN news_db.permission p ON p.id=gp.permission WHERE u.id=?";
+
+        Set<String> roles = new HashSet<>();
+
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement prStmt = connection.prepareStatement(query)) {
+            prStmt.setInt(1, idUser);
+            prStmt.executeQuery();
+            ResultSet resultSet = prStmt.getResultSet();
+
+            while (resultSet.next()) {
+                roles.add(resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            logger.error("Error get roles in filter");
+        }
+        return roles;
+    }
+
     private void validateToken(String token) throws Exception {
         String query = "SELECT * FROM news_db.users WHERE auth_token=?";
 
@@ -85,6 +117,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             ResultSet resultSet = prStmt.getResultSet();
 
             if (resultSet.next()) {
+                user = new User(resultSet.getInt(1), resultSet.getString(2));
                 return;
             } else {
                 logger.error("Error validate token");

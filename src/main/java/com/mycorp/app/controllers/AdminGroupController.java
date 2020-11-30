@@ -12,6 +12,7 @@ import com.mycorp.app.permission.PermissionService;
 import com.mycorp.app.permission.PermissionServiceImpl;
 import org.apache.log4j.Logger;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Secured
+@RolesAllowed("edit_group")
 @Path("/admin/group")
 public class AdminGroupController {
     private final static Logger logger = Logger.getLogger(AdminGroupController.class);
