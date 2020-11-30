@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.Set;
 
 @Secured
 @RolesAllowed("edit_news")
@@ -45,9 +47,13 @@ public class AdminController {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response adminNews() {
-        URI uri = UriBuilder.fromUri("/my-app-3.5/admin.html").build();
-        return Response.seeOther(uri).build();
+    public void adminNews(@Context HttpServletResponse response, @Context HttpServletRequest request, ContainerRequestContext requestContext) throws ServletException, IOException {
+        Set<String> permissions = (Set<String>) requestContext.getProperty("permissions");
+
+        request.setAttribute("userPermissions", permissions);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin.jsp");
+        requestDispatcher.forward(request, response);
     }
 
     @GET

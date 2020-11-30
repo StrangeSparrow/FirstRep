@@ -44,7 +44,7 @@ public class AuthenticationEndpoint {
 
             String token = issueToken(username);
 
-            URI uri = UriBuilder.fromUri("/my-app-3.5/admin.html").build();
+            URI uri = UriBuilder.fromUri("/my-app-3.5/app/admin").build();
             NewCookie cookieToken = new NewCookie(HttpHeaders.AUTHORIZATION, "Bearer" + " " + token);
             return Response.seeOther(uri).cookie(cookieToken).build();
 

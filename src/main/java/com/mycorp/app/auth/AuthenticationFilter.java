@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Priority;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -67,9 +68,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             abortWithUnauthorized(requestContext);
         }
 
-        boolean isSecure = requestContext.getSecurityContext().isSecure();
-        if (user != null)
-            requestContext.setSecurityContext(new Authorizer(getRolesUser(user.getId()), user, isSecure));
+        if (user != null) {
+            boolean isSecure = requestContext.getSecurityContext().isSecure();
+            Set<String> permissions = getRolesUser(user.getId());
+            requestContext.setSecurityContext(new Authorizer(permissions, user, isSecure));
+            requestContext.setProperty("permissions", permissions);
+        }
     }
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
