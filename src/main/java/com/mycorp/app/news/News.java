@@ -1,11 +1,30 @@
 package com.mycorp.app.news;
 
+import javax.persistence.*;
+import java.util.Objects;
+
+@Entity
+@Table (name = "news")
 public class News {
-    private String head;
-    private String briefly;
-    private String full;
+    @Id
+    @GeneratedValue
+    @Column (name = "id")
     private int id;
+
+    @Column (name = "head")
+    private String head;
+
+    @Column (name = "briefly")
+    private String briefly;
+
+    @Column (name = "full")
+    private String full;
+
+    @Column (name = "author")
     private String author;
+
+    public News() {
+    }
 
     public News(String head, String briefly, String full) {
         this.head = head;
@@ -66,5 +85,33 @@ public class News {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof News)) return false;
+        News news = (News) o;
+        return id == news.id &&
+                Objects.equals(head, news.head) &&
+                Objects.equals(briefly, news.briefly) &&
+                Objects.equals(full, news.full) &&
+                Objects.equals(author, news.author);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, head, briefly, full, author);
+    }
+
+    @Override
+    public String toString() {
+        return "News{" +
+                "id=" + id +
+                ", head='" + head + '\'' +
+                ", briefly='" + briefly + '\'' +
+                ", full='" + full + '\'' +
+                ", author='" + author + '\'' +
+                '}';
     }
 }

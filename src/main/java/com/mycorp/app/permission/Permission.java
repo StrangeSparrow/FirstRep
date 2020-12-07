@@ -1,9 +1,23 @@
 package com.mycorp.app.permission;
 
+import javax.persistence.*;
+
+@Entity
+@Table (name = "permission")
 public class Permission {
+    @Id
+    @GeneratedValue
+    @Column (name = "id")
     private int id;
+
+    @Column (name = "name")
     private String name;
+
+    @Column (name = "description")
     private String description;
+
+    public Permission() {
+    }
 
     public Permission(int id, String name, String description) {
         this.id = id;
@@ -51,5 +65,14 @@ public class Permission {
         if (id == ((Permission) permission).getId())
             return true;
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Permission{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

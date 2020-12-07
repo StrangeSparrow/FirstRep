@@ -2,12 +2,25 @@ package com.mycorp.app.group;
 
 import com.mycorp.app.permission.Permission;
 
+import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
+@Entity
+@Table (name = "group")
 public class Group {
+    @Id
+    @GeneratedValue
+    @Column (name = "id")
     private int id;
+
+    @Column (name = "name")
     private String name;
     private List<Permission> permission = null;
+
+    public Group() {
+
+    }
 
     public Group(String name) {
         this.name = name;
@@ -51,5 +64,29 @@ public class Group {
 
     public void setPermission(List<Permission> permission) {
         this.permission = permission;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Group)) return false;
+        Group group = (Group) o;
+        return id == group.id &&
+                Objects.equals(name, group.name) &&
+                Objects.equals(permission, group.permission);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, permission);
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", permission=" + permission +
+                '}';
     }
 }
