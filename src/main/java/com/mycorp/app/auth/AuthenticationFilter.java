@@ -1,5 +1,6 @@
 package com.mycorp.app.auth;
 
+import com.mycorp.app.Constants;
 import com.mycorp.app.dao.DbManager;
 import com.mycorp.app.user.User;
 import com.mycorp.app.user.UserService;
@@ -23,13 +24,13 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
 
+import static com.mycorp.app.Constants.AUTHENTICATION_SCHEME;
+
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
-    private static final String REALM = "admin";
-    private static final String AUTHENTICATION_SCHEME = "Bearer";
     private static DbManager dbManager = null;
 
     static {
@@ -76,7 +77,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 throwables.printStackTrace();
             }
             boolean isSecure = requestContext.getSecurityContext().isSecure();
-            Set<String> permissions = userService.getRolesUser(user.getId());
+            Set<String> permissions = userService.getUserRoles(user.getId());
             requestContext.setSecurityContext(new Authorizer(permissions, user, isSecure));
             requestContext.setProperty("permissions", permissions);
         }
@@ -84,12 +85,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
         return authorizationHeader != null && authorizationHeader.toLowerCase()
-                .startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");
+                .startsWith(Constants.AUTHENTICATION_SCHEME.toLowerCase() + " ");
     }
 
     private void abortWithUnauthorized(ContainerRequestContext requestContext) {
         requestContext.abortWith(
-                Response.status(Response.Status.UNAUTHORIZED).header(HttpHeaders.WWW_AUTHENTICATE, AUTHENTICATION_SCHEME + " realm=\"" + REALM + "\"")
+                Response.status(Response.Status.UNAUTHORIZED).header(HttpHeaders.WWW_AUTHENTICATE, Constants.AUTHENTICATION_SCHEME + " realm=\"" + Constants.REALM + "\"")
                         .build());
     }
 

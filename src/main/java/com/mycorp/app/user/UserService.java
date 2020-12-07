@@ -10,5 +10,8 @@ public interface UserService {
     void addUser(User user) throws SQLException;
     void editUser(User user) throws SQLException;
     void deleteUser(int id) throws SQLException;
-    Set<String> getRolesUser(int id);
+    Set<String> getUserRoles(int id);
+    String issueToken(int id);
+    User authenticate(String username, String password) throws Exception;
+    void deleteToken(String token);
 }
