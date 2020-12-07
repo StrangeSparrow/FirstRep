@@ -1,6 +1,8 @@
 package com.mycorp.app.user;
 
-public class User {
+import java.security.Principal;
+
+public class User implements Principal {
     private int id;
     private String login;
     private String group;
@@ -60,5 +62,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String getName() {
+        return getLogin();
     }
 }

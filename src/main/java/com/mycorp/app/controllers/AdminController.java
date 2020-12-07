@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.*;
+import com.mycorp.app.auth.Secured;
 import com.mycorp.app.news.News;
 import com.mycorp.app.news.NewsService;
 import com.mycorp.app.news.NewsServiceDbImpl;
@@ -9,11 +10,13 @@ import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import org.apache.log4j.Logger;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -21,10 +24,13 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.Set;
 
+@Secured
+@RolesAllowed("edit_news")
 @Path("/admin")
 public class AdminController {
-    private final static Logger logger = Logger.getLogger(NewsController.class);
+    private final static Logger logger = Logger.getLogger(AdminController.class);
 
     private static NewsService newsService = null;
     static {
@@ -41,9 +47,13 @@ public class AdminController {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response adminNews() {
-        URI uri = UriBuilder.fromUri("/my-app-3.5/admin.html").build();
-        return Response.seeOther(uri).build();
+    public void adminNews(@Context HttpServletResponse response, @Context HttpServletRequest request, ContainerRequestContext requestContext) throws ServletException, IOException {
+        Set<String> permissions = (Set<String>) requestContext.getProperty("permissions");
+
+        request.setAttribute("userPermissions", permissions);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin.jsp");
+        requestDispatcher.forward(request, response);
     }
 
     @GET

@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.Config;
+import com.mycorp.app.auth.Secured;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import com.mycorp.app.user.User;
@@ -8,6 +9,7 @@ import com.mycorp.app.user.UserService;
 import com.mycorp.app.user.UserServiceImpl;
 import org.apache.log4j.Logger;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 
+@Secured
+@RolesAllowed("edit_user")
 @Path("/admin/user")
 public class AdminUserController {
     private final static Logger logger = Logger.getLogger(AdminUserController.class);

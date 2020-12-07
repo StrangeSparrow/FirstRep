@@ -1,6 +1,7 @@
 package com.mycorp.app.user;
 
 import com.mycorp.app.dao.DbManager;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -8,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class UserServiceImpl implements UserService {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
@@ -106,6 +109,82 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException e) {
             logger.error(e);
             throw e;
+        }
+    }
+
+    @Override
+    public Set<String> getUserRoles(int id) {
+        String query = "SELECT p.name FROM news_db.users u " +
+                "JOIN news_db.group g ON g.id=u.group " +
+                "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
+                "JOIN news_db.permission p ON p.id=gp.permission WHERE u.id=?";
+
+        Set<String> roles = new HashSet<>();
+
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement prStmt = connection.prepareStatement(query)) {
+            prStmt.setInt(1, id);
+            prStmt.executeQuery();
+            ResultSet resultSet = prStmt.getResultSet();
+
+            while (resultSet.next()) {
+                roles.add(resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            logger.error("Error get roles in filter");
+        }
+        return roles;
+    }
+
+    @Override
+    public String issueToken(int id) {
+        String query = "UPDATE news_db.users SET auth_token=? WHERE (id=?)";
+        String token = RandomStringUtils.random(20, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement prStmt = connection.prepareStatement(query)) {
+            prStmt.setString(1, token);
+            prStmt.setInt(2, id);
+            prStmt.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+        return token;
+    }
+
+    @Override
+    public User authenticate(String username, String password) throws Exception {
+        String query = "SELECT * FROM news_db.users u WHERE u.login=? AND u.password=?";
+
+        try (Connection connection = dbManager.getConnection();
+             PreparedStatement prStmt = connection.prepareStatement(query)) {
+            prStmt.setString(1, username);
+            prStmt.setString(2, password);
+            prStmt.executeQuery();
+
+            ResultSet resultSet = prStmt.getResultSet();
+
+            if (resultSet.next()) {
+                User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(4), resultSet.getString(3));
+                return user;
+            } else {
+                logger.error("User not found");
+                throw new Exception();
+            }
+        }
+    }
+
+    @Override
+    public void deleteToken(String token) {
+        String query = "UPDATE news_db.users SET auth_token = NULL WHERE (auth_token=?)";
+
+        try (Connection connection = new DbManager().getConnection();
+             PreparedStatement prStmt = connection.prepareStatement(query)) {
+            prStmt.setString(1, token);
+            prStmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Logout ERROR");
         }
     }
 }

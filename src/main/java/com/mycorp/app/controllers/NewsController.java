@@ -44,7 +44,7 @@ public class NewsController {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Response allNews() {
-        URI uri = UriBuilder.fromUri("/my-app-3.5/news.html").build();
+        URI uri = UriBuilder.fromUri(Constants.APP + "news.html").build();
         return Response.seeOther(uri).build();
     }
 

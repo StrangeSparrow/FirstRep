@@ -1,6 +1,7 @@
 package com.mycorp.app.controllers;
 
 import com.mycorp.app.Config;
+import com.mycorp.app.auth.Secured;
 import com.mycorp.app.group.Group;
 import com.mycorp.app.group.GroupService;
 import com.mycorp.app.group.GroupServiceImpl;
@@ -11,6 +12,7 @@ import com.mycorp.app.permission.PermissionService;
 import com.mycorp.app.permission.PermissionServiceImpl;
 import org.apache.log4j.Logger;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Secured
+@RolesAllowed("edit_group")
 @Path("/admin/group")
 public class AdminGroupController {
     private final static Logger logger = Logger.getLogger(AdminGroupController.class);
