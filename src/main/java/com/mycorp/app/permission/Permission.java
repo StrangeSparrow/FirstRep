@@ -1,6 +1,9 @@
 package com.mycorp.app.permission;
 
+import com.mycorp.app.group.Group;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table (name = "permission")
@@ -15,6 +18,12 @@ public class Permission {
 
     @Column (name = "description")
     private String description;
+
+    @ManyToMany (fetch = FetchType.LAZY)
+    @JoinTable(name = "group_to_permission",
+            joinColumns = @JoinColumn(name = "permission"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+    private List<Group> groups;
 
     public Permission() {
     }
@@ -49,6 +58,14 @@ public class Permission {
         this.description = description;
     }
 
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -65,14 +82,5 @@ public class Permission {
         if (id == ((Permission) permission).getId())
             return true;
         return false;
-    }
-
-    @Override
-    public String toString() {
-        return "Permission{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

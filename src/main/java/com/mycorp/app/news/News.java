@@ -1,5 +1,7 @@
 package com.mycorp.app.news;
 
+import com.mycorp.app.user.User;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -7,7 +9,7 @@ import java.util.Objects;
 @Table (name = "news")
 public class News {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "id")
     private int id;
 
@@ -20,8 +22,9 @@ public class News {
     @Column (name = "full")
     private String full;
 
-    @Column (name = "author")
-    private String author;
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "author")
+    private User authorNews;
 
     public News() {
     }
@@ -36,15 +39,6 @@ public class News {
         this.briefly = briefly;
         this.full = full;
         this.id = id;
-        this.author = null;
-    }
-
-    public News(String head, String briefly, String full, int id, String author) {
-        this.head = head;
-        this.briefly = briefly;
-        this.full = full;
-        this.id = id;
-        this.author = author;
     }
 
     public String getHead() {
@@ -79,39 +73,11 @@ public class News {
         this.id = id;
     }
 
-    public String getAuthor() {
-        return author;
+    public User getAuthorNews() {
+        return authorNews;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof News)) return false;
-        News news = (News) o;
-        return id == news.id &&
-                Objects.equals(head, news.head) &&
-                Objects.equals(briefly, news.briefly) &&
-                Objects.equals(full, news.full) &&
-                Objects.equals(author, news.author);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, head, briefly, full, author);
-    }
-
-    @Override
-    public String toString() {
-        return "News{" +
-                "id=" + id +
-                ", head='" + head + '\'' +
-                ", briefly='" + briefly + '\'' +
-                ", full='" + full + '\'' +
-                ", author='" + author + '\'' +
-                '}';
+    public void setAuthorNews(User authorNews) {
+        this.authorNews = authorNews;
     }
 }

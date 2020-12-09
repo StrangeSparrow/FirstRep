@@ -1,8 +1,11 @@
 package com.mycorp.app.user;
 
+import com.mycorp.app.group.Group;
+import com.mycorp.app.news.News;
+
 import javax.persistence.*;
 import java.security.Principal;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
 @Table (name = "users")
@@ -15,7 +18,10 @@ public class User implements Principal {
     @Column (name = "login")
     private String login;
 
-    @Column (name = "group")
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "group", insertable = false, updatable = false)
+    private Group userGroup;
+
     private String group;
 
     @Column (name = "password")
@@ -23,6 +29,12 @@ public class User implements Principal {
 
     @Column (name = "auth_token")
     private String token;
+
+    @OneToMany (mappedBy = "authorNews", cascade = CascadeType.ALL)
+    List<News> news;
+
+    public User() {
+    }
 
     public User(int id, String login, String group) {
         this.id = id;
@@ -88,32 +100,20 @@ public class User implements Principal {
         this.token = token;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return getId() == user.getId() &&
-                Objects.equals(getLogin(), user.getLogin()) &&
-                Objects.equals(getGroup(), user.getGroup()) &&
-                Objects.equals(getPassword(), user.getPassword()) &&
-                Objects.equals(getToken(), user.getToken());
+    public List<News> getNews() {
+        return news;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getLogin(), getGroup(), getPassword(), getToken());
+    public void setNews(List<News> news) {
+        this.news = news;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", group='" + group + '\'' +
-                ", password='" + password + '\'' +
-                ", token='" + token + '\'' +
-                '}';
+    public Group getUserGroup() {
+        return userGroup;
+    }
+
+    public void setUserGroup(Group userGroup) {
+        this.userGroup = userGroup;
     }
 
     @Override

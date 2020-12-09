@@ -2,10 +2,7 @@ package com.mycorp.app.controllers;
 
 import com.mycorp.app.*;
 import com.mycorp.app.auth.Secured;
-import com.mycorp.app.news.News;
-import com.mycorp.app.news.NewsService;
-import com.mycorp.app.news.NewsServiceDbImpl;
-import com.mycorp.app.news.NewsServiceImpl;
+import com.mycorp.app.news.*;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import org.apache.log4j.Logger;
@@ -35,11 +32,7 @@ public class AdminController {
     private static NewsService newsService = null;
     static {
         if (Config.getInstance().getSource().equals("database")) {
-            try {
-                newsService = new NewsServiceDbImpl();
-            } catch (SQLException e) {
-                logger.error(e);
-            }
+            newsService = new NewsDao();
         } else {
             newsService = new NewsServiceImpl();
         }

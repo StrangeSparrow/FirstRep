@@ -1,25 +1,33 @@
 package com.mycorp.app.group;
 
 import com.mycorp.app.permission.Permission;
+import com.mycorp.app.user.User;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table (name = "group")
+@Table (name = "user_group")
 public class Group {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "id")
     private int id;
 
     @Column (name = "name")
     private String name;
-    private List<Permission> permission = null;
+
+    @OneToMany (mappedBy = "userGroup", cascade = CascadeType.ALL)
+    private List<User> users;
+
+    @ManyToMany (fetch = FetchType.LAZY)
+    @JoinTable(name = "group_to_permission",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission"))
+    private List<Permission> permission;
 
     public Group() {
-
     }
 
     public Group(String name) {
@@ -66,6 +74,14 @@ public class Group {
         this.permission = permission;
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,14 +95,5 @@ public class Group {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, permission);
-    }
-
-    @Override
-    public String toString() {
-        return "Group{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", permission=" + permission +
-                '}';
     }
 }

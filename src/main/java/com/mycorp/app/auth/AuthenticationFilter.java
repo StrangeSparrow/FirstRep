@@ -41,7 +41,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
 
-    UserService userService;
+    private UserService userService;
     private User user;
 
     @Override

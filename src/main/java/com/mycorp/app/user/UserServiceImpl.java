@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> fetchUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT u.id, u.login, g.name FROM news_db.users u LEFT OUTER JOIN news_db.group g ON u.group=g.id";
+        String query = "SELECT u.id, u.login, g.name FROM news_db.users u LEFT OUTER JOIN news_db.user_group g ON u.group=g.id";
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User fetchSingleUser(int id) throws SQLException {
         User user = null;
-        String query = "SELECT u.id, u.login, g.name, u.password FROM news_db.users u LEFT OUTER JOIN news_db.group g ON u.group=g.id WHERE u.id=?";
+        String query = "SELECT u.id, u.login, g.name, u.password FROM news_db.users u LEFT OUTER JOIN news_db.user_group g ON u.group=g.id WHERE u.id=?";
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Set<String> getUserRoles(int id) {
         String query = "SELECT p.name FROM news_db.users u " +
-                "JOIN news_db.group g ON g.id=u.group " +
+                "JOIN news_db.user_group g ON g.id=u.group " +
                 "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
                 "JOIN news_db.permission p ON p.id=gp.permission WHERE u.id=?";
 
