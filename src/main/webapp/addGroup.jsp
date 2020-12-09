@@ -14,7 +14,7 @@
             <td style="width: 70%;"><input type="text" name="name" size="30" /></td>
         </tr>
         <%
-            PermissionService permServ = new PermissionServiceImpl();
+            PermissionService permServ = new PermissionDao();
             List<Permission> permissionList = permServ.fetchPermissions();
 
             for (Permission permission : permissionList) {
