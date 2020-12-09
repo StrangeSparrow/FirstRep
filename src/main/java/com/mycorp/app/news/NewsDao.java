@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
-public class NewsDao implements NewsService{
+public class NewsDao implements NewsService {
     private EntityManager manager;
 
     @Override

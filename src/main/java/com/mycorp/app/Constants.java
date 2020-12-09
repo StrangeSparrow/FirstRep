@@ -9,5 +9,6 @@ public final class Constants {
     public static final String REALM = "admin";
     public static final String AUTHENTICATION_SCHEME = "Bearer";
 
-    private Constants(){}
+    private Constants() {
+    }
 }

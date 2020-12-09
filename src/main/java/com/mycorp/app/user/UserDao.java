@@ -73,7 +73,8 @@ public class UserDao implements UserService {
         User user = null;
         try {
             user = fetchSingleUser(id);
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+        }
 
         Set<String> roles = new HashSet<>();
 

@@ -8,28 +8,23 @@ import java.security.Principal;
 import java.util.List;
 
 @Entity
-@Table (name = "users")
+@Table(name = "users")
 public class User implements Principal {
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
-    private int id;
-
-    @Column (name = "login")
-    private String login;
-
-    @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "user_group")
-    private Group userGroup;
-
-    @Column (name = "password")
-    private String password;
-
-    @Column (name = "auth_token")
-    private String token;
-
-    @OneToMany (mappedBy = "authorNews", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "authorNews", cascade = CascadeType.ALL)
     List<News> news;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "login")
+    private String login;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_group")
+    private Group userGroup;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "auth_token")
+    private String token;
 
     public User() {
     }

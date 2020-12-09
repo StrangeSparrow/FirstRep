@@ -1,8 +1,11 @@
 package com.mycorp.app.controllers;
 
-import com.mycorp.app.*;
+import com.mycorp.app.Config;
 import com.mycorp.app.auth.Secured;
-import com.mycorp.app.news.*;
+import com.mycorp.app.news.News;
+import com.mycorp.app.news.NewsDao;
+import com.mycorp.app.news.NewsService;
+import com.mycorp.app.news.NewsServiceImpl;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import org.apache.log4j.Logger;
@@ -29,7 +32,8 @@ import java.util.Set;
 public class AdminController {
     private final static Logger logger = Logger.getLogger(AdminController.class);
 
-    private static NewsService newsService = null;
+    private static NewsService newsService;
+
     static {
         if (Config.getInstance().getSource().equals("database")) {
             newsService = new NewsDao();

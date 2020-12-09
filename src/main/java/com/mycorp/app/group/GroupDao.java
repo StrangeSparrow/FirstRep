@@ -3,8 +3,7 @@ package com.mycorp.app.group;
 import java.sql.SQLException;
 import java.util.List;
 
-public class GroupDao implements GroupService
-{
+public class GroupDao implements GroupService {
     @Override
     public List<Group> fetchGroup() throws SQLException {
         return null;

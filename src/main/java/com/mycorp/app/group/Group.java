@@ -8,20 +8,20 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table (name = "user_group")
+@Table(name = "user_group")
 public class Group {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
-    @Column (name = "name")
+    @Column(name = "name")
     private String name;
 
-    @OneToMany (mappedBy = "userGroup", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     private List<User> users;
 
-    @ManyToMany (fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "group_to_permission",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "permission"))

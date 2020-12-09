@@ -8,7 +8,7 @@ public class PaginatorImpl<T> implements Paginator<T> {
     private int totalPage;
     private List<T> dataList;
 
-    public PaginatorImpl(){
+    public PaginatorImpl() {
         pageSize = 5;
         currentPage = 1;
         totalPage = 1;
@@ -30,26 +30,26 @@ public class PaginatorImpl<T> implements Paginator<T> {
     }
 
     @Override
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    @Override
-    public int getTotalPage() {
-        return totalPage;
-    }
-
-    @Override
     public void setCurrentPage(int page) {
         if (page > totalPage)
-            throw  new IllegalArgumentException();
+            throw new IllegalArgumentException();
         currentPage = page;
+    }
+
+    @Override
+    public int getPageSize() {
+        return pageSize;
     }
 
     @Override
     public void setPageSize(int size) {
         pageSize = size;
         findTotalPage();
+    }
+
+    @Override
+    public int getTotalPage() {
+        return totalPage;
     }
 
     @Override

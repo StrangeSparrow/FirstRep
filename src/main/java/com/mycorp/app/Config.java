@@ -9,31 +9,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Config {
-    private final Map<String, String> loadedParams = new HashMap<>();
     private static final Config Instance = new Config();
     private final static Logger logger = Logger.getLogger(Config.class);
+    private final Map<String, String> loadedParams = new HashMap<>();
 
-    public enum Parameters {
-        PAGE_SIZE("news.page_size"),
-        ONLY_HEADERS("news.list.only_headers"),
-        NEWS_FILENAME("news.file_name"),
-        LOCAL_NEWS_FILENAME("news.local_file_name"),
-        DB_NAME("db.name"),
-        DB_PASS("db.password"),
-        DB_URL("db.url"),
-        DB_MIGRATION("db.migration_prop"),
-        APP_SOURCE("app.data_source");
-
-        private final String param;
-
-        Parameters (String param) {
-            this.param = param;
-        }
-
-        String getParam () { return param; }
+    private Config() {
     }
-
-    private Config() {}
 
     public static Config getInstance() {
         return Instance;
@@ -47,7 +28,9 @@ public class Config {
         return getParam(Parameters.DB_MIGRATION.getParam());
     }
 
-    public String getSource() { return getParam(Parameters.APP_SOURCE.getParam()); }
+    public String getSource() {
+        return getParam(Parameters.APP_SOURCE.getParam());
+    }
 
     public String getDBPass() {
         return getParam(Parameters.DB_PASS.getParam());
@@ -67,7 +50,7 @@ public class Config {
 
     public int getPageSize() {
         String result = getParam(Parameters.PAGE_SIZE.getParam());
-        if (result == null || ! result.matches("^\\d+$"))
+        if (result == null || !result.matches("^\\d+$"))
             return -1;
 
         return Integer.parseInt(result);
@@ -99,5 +82,27 @@ public class Config {
             logger.error(e);
         }
         return result;
+    }
+
+    public enum Parameters {
+        PAGE_SIZE("news.page_size"),
+        ONLY_HEADERS("news.list.only_headers"),
+        NEWS_FILENAME("news.file_name"),
+        LOCAL_NEWS_FILENAME("news.local_file_name"),
+        DB_NAME("db.name"),
+        DB_PASS("db.password"),
+        DB_URL("db.url"),
+        DB_MIGRATION("db.migration_prop"),
+        APP_SOURCE("app.data_source");
+
+        private final String param;
+
+        Parameters(String param) {
+            this.param = param;
+        }
+
+        String getParam() {
+            return param;
+        }
     }
 }

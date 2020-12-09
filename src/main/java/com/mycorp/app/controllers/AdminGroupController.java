@@ -61,8 +61,8 @@ public class AdminGroupController {
     @POST
     @Path("/add")
     @Produces(MediaType.TEXT_HTML)
-    public Response addGroup(@FormParam("permission[]") List <Integer> permissions,
-                           @FormParam("name") String name) throws SQLException {
+    public Response addGroup(@FormParam("permission[]") List<Integer> permissions,
+                             @FormParam("name") String name) throws SQLException {
 
         URI uri = UriBuilder.fromUri("admin/group/page/1").build();
 

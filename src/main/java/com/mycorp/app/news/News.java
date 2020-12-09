@@ -5,24 +5,24 @@ import com.mycorp.app.user.User;
 import javax.persistence.*;
 
 @Entity
-@Table (name = "news")
+@Table(name = "news")
 public class News {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
-    @Column (name = "head")
+    @Column(name = "head")
     private String head;
 
-    @Column (name = "briefly")
+    @Column(name = "briefly")
     private String briefly;
 
-    @Column (name = "full")
+    @Column(name = "full")
     private String full;
 
     @ManyToOne
-    @JoinColumn (name = "author")
+    @JoinColumn(name = "author")
     private User authorNews;
 
     public News() {
@@ -33,6 +33,7 @@ public class News {
         this.briefly = briefly;
         this.full = full;
     }
+
     public News(String head, String briefly, String full, int id) {
         this.head = head;
         this.briefly = briefly;

@@ -30,12 +30,13 @@ import java.sql.SQLException;
 @Path("/admin/user")
 public class AdminUserController {
     private final static Logger logger = Logger.getLogger(AdminUserController.class);
-    private static UserService userService;
-    private EntityManager manager = HibernateUtil.getManager();
+    private static final UserService userService;
 
     static {
         userService = new UserDao();
     }
+
+    private final EntityManager manager = HibernateUtil.getManager();
 
     @GET
     @Path("/page/{id}")

@@ -6,17 +6,17 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table (name = "permission")
+@Table(name = "permission")
 public class Permission {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
-    @Column (name = "name")
+    @Column(name = "name")
     private String name;
 
-    @Column (name = "description")
+    @Column(name = "description")
     private String description;
 
     @ManyToMany
@@ -76,11 +76,9 @@ public class Permission {
         if (permission == this)
             return true;
 
-        if (! (permission instanceof  Permission))
+        if (!(permission instanceof Permission))
             return false;
 
-        if (id == ((Permission) permission).getId())
-            return true;
-        return false;
+        return id == ((Permission) permission).getId();
     }
 }

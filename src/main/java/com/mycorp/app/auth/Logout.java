@@ -18,7 +18,7 @@ import java.net.URI;
 @Path("/logout")
 public class Logout {
     private static final Logger logger = LoggerFactory.getLogger(Logout.class);
-    private static UserService userService;
+    private static final UserService userService;
 
     static {
         userService = new UserDao();

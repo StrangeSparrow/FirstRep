@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GroupServiceImpl implements GroupService {
     private final static Logger logger = Logger.getLogger(GroupServiceImpl.class);
-    private DbManager dbManager;
+    private final DbManager dbManager;
 
     public GroupServiceImpl() throws SQLException {
         dbManager = new DbManager();
@@ -101,7 +101,7 @@ public class GroupServiceImpl implements GroupService {
         String query = "INSERT INTO news_db.user_group (name) VALUES (?)";
 
         try (Connection connection = dbManager.getConnection();
-             PreparedStatement prStmt = connection.prepareStatement(query, new String[] {"id"})) {
+             PreparedStatement prStmt = connection.prepareStatement(query, new String[]{"id"})) {
             prStmt.setString(1, group.getName());
             prStmt.executeUpdate();
 
