@@ -9,7 +9,7 @@ import java.util.List;
 @Table (name = "permission")
 public class Permission {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "id")
     private int id;
 
@@ -19,7 +19,7 @@ public class Permission {
     @Column (name = "description")
     private String description;
 
-    @ManyToMany (fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "group_to_permission",
             joinColumns = @JoinColumn(name = "permission"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))

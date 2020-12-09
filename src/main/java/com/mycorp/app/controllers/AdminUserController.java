@@ -2,14 +2,17 @@ package com.mycorp.app.controllers;
 
 import com.mycorp.app.Config;
 import com.mycorp.app.auth.Secured;
+import com.mycorp.app.dao.HibernateUtil;
+import com.mycorp.app.group.Group;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import com.mycorp.app.user.User;
+import com.mycorp.app.user.UserDao;
 import com.mycorp.app.user.UserService;
-import com.mycorp.app.user.UserServiceImpl;
 import org.apache.log4j.Logger;
 
 import javax.annotation.security.RolesAllowed;
+import javax.persistence.EntityManager;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,13 +31,10 @@ import java.sql.SQLException;
 public class AdminUserController {
     private final static Logger logger = Logger.getLogger(AdminUserController.class);
     private static UserService userService;
+    private EntityManager manager = HibernateUtil.getManager();
 
     static {
-        try {
-            userService = new UserServiceImpl();
-        } catch (SQLException e) {
-            logger.error(e);
-        }
+        userService = new UserDao();
     }
 
     @GET
@@ -71,6 +71,7 @@ public class AdminUserController {
             return Response.seeOther(uri).build();
 
         User user = new User(login, group, password);
+        user.setUserGroup(manager.find(Group.class, Integer.parseInt(group)));
         userService.addUser(user);
 
         return Response.seeOther(uri).build();
@@ -94,6 +95,7 @@ public class AdminUserController {
                                 @FormParam("group") String group,
                                 @FormParam("password") String password) throws SQLException {
         User user = new User(id, login, group, password);
+        user.setUserGroup(manager.find(Group.class, Integer.parseInt(group)));
         userService.editUser(user);
 
         URI uri = UriBuilder.fromUri("admin/user/page/1").build();

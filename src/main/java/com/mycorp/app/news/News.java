@@ -3,7 +3,6 @@ package com.mycorp.app.news;
 import com.mycorp.app.user.User;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table (name = "news")
@@ -22,7 +21,7 @@ public class News {
     @Column (name = "full")
     private String full;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn (name = "author")
     private User authorNews;
 

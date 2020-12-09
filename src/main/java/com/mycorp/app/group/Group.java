@@ -21,7 +21,7 @@ public class Group {
     @OneToMany (mappedBy = "userGroup", cascade = CascadeType.ALL)
     private List<User> users;
 
-    @ManyToMany (fetch = FetchType.LAZY)
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(name = "group_to_permission",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "permission"))

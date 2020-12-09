@@ -16,6 +16,7 @@ public class NewsDao implements NewsService{
         manager = HibernateUtil.getManager();
         manager.getTransaction().begin();
         List<News> news = manager.createQuery("FROM News").getResultList();
+        manager.getTransaction().commit();
         manager.close();
 
         Collections.reverse(news);
@@ -30,6 +31,7 @@ public class NewsDao implements NewsService{
         Query query = manager.createQuery("FROM News WHERE id = :id");
         query.setParameter("id", id);
         News news = (News) query.getSingleResult();
+        manager.getTransaction().commit();
         manager.close();
 
         return news;

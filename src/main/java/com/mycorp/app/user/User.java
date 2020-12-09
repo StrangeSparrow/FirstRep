@@ -11,18 +11,16 @@ import java.util.List;
 @Table (name = "users")
 public class User implements Principal {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "id")
     private int id;
 
     @Column (name = "login")
     private String login;
 
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn (name = "group", insertable = false, updatable = false)
+    @ManyToOne (cascade = CascadeType.ALL)
+    @JoinColumn (name = "user_group")
     private Group userGroup;
-
-    private String group;
 
     @Column (name = "password")
     private String password;
@@ -39,7 +37,6 @@ public class User implements Principal {
     public User(int id, String login, String group) {
         this.id = id;
         this.login = login;
-        this.group = group;
     }
 
     public User(int id, String login) {
@@ -49,14 +46,12 @@ public class User implements Principal {
 
     public User(String login, String group, String password) {
         this.login = login;
-        this.group = group;
         this.password = password;
     }
 
     public User(int id, String login, String group, String password) {
         this.id = id;
         this.login = login;
-        this.group = group;
         this.password = password;
     }
 
@@ -76,13 +71,6 @@ public class User implements Principal {
         this.login = login;
     }
 
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
 
     public String getPassword() {
         return password;
