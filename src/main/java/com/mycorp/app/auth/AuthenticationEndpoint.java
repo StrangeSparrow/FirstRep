@@ -4,8 +4,8 @@ import com.google.common.net.HttpHeaders;
 import com.mycorp.app.Constants;
 import com.mycorp.app.dao.DbManager;
 import com.mycorp.app.user.User;
+import com.mycorp.app.user.UserDao;
 import com.mycorp.app.user.UserService;
-import com.mycorp.app.user.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ public class AuthenticationEndpoint {
     static {
         try {
             dbManager = new DbManager();
-            userService = new UserServiceImpl();
+            userService = new UserDao();
         } catch (SQLException e) {
             logger.error("AuthenticationEndpoint error. DbManager error");
         }

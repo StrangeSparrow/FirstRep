@@ -1,31 +1,44 @@
 package com.mycorp.app.news;
 
+import com.mycorp.app.user.User;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "news")
 public class News {
-    private String head;
-    private String briefly;
-    private String full;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
-    private String author;
+
+    @Column(name = "head")
+    private String head;
+
+    @Column(name = "briefly")
+    private String briefly;
+
+    @Column(name = "full")
+    private String full;
+
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private User authorNews;
+
+    public News() {
+    }
 
     public News(String head, String briefly, String full) {
         this.head = head;
         this.briefly = briefly;
         this.full = full;
     }
+
     public News(String head, String briefly, String full, int id) {
         this.head = head;
         this.briefly = briefly;
         this.full = full;
         this.id = id;
-        this.author = null;
-    }
-
-    public News(String head, String briefly, String full, int id, String author) {
-        this.head = head;
-        this.briefly = briefly;
-        this.full = full;
-        this.id = id;
-        this.author = author;
     }
 
     public String getHead() {
@@ -60,11 +73,11 @@ public class News {
         this.id = id;
     }
 
-    public String getAuthor() {
-        return author;
+    public User getAuthorNews() {
+        return authorNews;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorNews(User authorNews) {
+        this.authorNews = authorNews;
     }
 }

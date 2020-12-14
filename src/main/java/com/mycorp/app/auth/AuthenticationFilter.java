@@ -3,8 +3,8 @@ package com.mycorp.app.auth;
 import com.mycorp.app.Constants;
 import com.mycorp.app.dao.DbManager;
 import com.mycorp.app.user.User;
+import com.mycorp.app.user.UserDao;
 import com.mycorp.app.user.UserService;
-import com.mycorp.app.user.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
     }
 
-    UserService userService;
+    private UserService userService;
     private User user;
 
     @Override
@@ -71,11 +71,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
 
         if (user != null) {
-            try {
-                userService = new UserServiceImpl();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+            userService = new UserDao();
+
             boolean isSecure = requestContext.getSecurityContext().isSecure();
             Set<String> permissions = userService.getUserRoles(user.getId());
             requestContext.setSecurityContext(new Authorizer(permissions, user, isSecure));

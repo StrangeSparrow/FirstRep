@@ -15,6 +15,11 @@ import java.util.Properties;
 public class DbManager {
     private final static Logger logger = LoggerFactory.getLogger(DbManager.class);
 
+    static {
+        migrate();
+        logger.info("Migration is on");
+    }
+
     public DbManager() throws SQLException {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
@@ -25,14 +30,9 @@ public class DbManager {
         }
     }
 
-    static {
-        migrate();
-        logger.info("Migration is on");
-    }
-
     private static void migrate() {
         Properties properties = new Properties();
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(Config.getInstance().getDBMigration())){
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(Config.getInstance().getDBMigration())) {
             properties.load(is);
             logger.info("Loaded properties");
         } catch (IOException e) {

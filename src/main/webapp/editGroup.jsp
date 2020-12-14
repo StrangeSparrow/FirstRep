@@ -24,7 +24,7 @@
         </tr>
 
         <%
-            List<Permission> permissionList = new  PermissionServiceImpl().fetchPermissions();
+            List<Permission> permissionList = new  PermissionDao().fetchPermissions();
             List<Permission> groupPermission = group.getPermission();
 
             for (Permission permission : permissionList) {

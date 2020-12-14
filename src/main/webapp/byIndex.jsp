@@ -15,9 +15,9 @@
 
         out.println("<h2>" + news.getHead() + "</h2>");
         out.println("<p align=\"justify\">" + news.getFull() + "</p>");
-        if (news.getAuthor() != null) {
+        if (news.getAuthorNews() != null) {
             out.println("<br>");
-            out.println("<p align=\"right\"><i>Автор: " + news.getAuthor() + "</i></p>");
+            out.println("<p align=\"right\"><i>Автор: " + news.getAuthorNews().getName() + "</i></p>");
         }
     %>
     </td>

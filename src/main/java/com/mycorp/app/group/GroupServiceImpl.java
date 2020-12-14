@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GroupServiceImpl implements GroupService {
     private final static Logger logger = Logger.getLogger(GroupServiceImpl.class);
-    private DbManager dbManager;
+    private final DbManager dbManager;
 
     public GroupServiceImpl() throws SQLException {
         dbManager = new DbManager();
@@ -23,8 +23,8 @@ public class GroupServiceImpl implements GroupService {
     public List<Group> fetchGroup() throws SQLException {
         List<Group> groupList = new ArrayList<>();
 
-        String queryIdAndName = "SELECT * FROM news_db.group";
-        String queryPermission = "SELECT p.* FROM news_db.group g " +
+        String queryIdAndName = "SELECT * FROM news_db.user_group";
+        String queryPermission = "SELECT p.* FROM news_db.user_group g " +
                 "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
                 "JOIN news_db.permission p ON p.id=gp.permission WHERE g.id=?";
 
@@ -61,9 +61,9 @@ public class GroupServiceImpl implements GroupService {
     public Group fetchSingleGroup(int id) throws SQLException {
         Group group = null;
 
-        String query = "SELECT name FROM news_db.group WHERE id=?";
+        String query = "SELECT name FROM news_db.user_group WHERE id=?";
 
-        String queryPermission = "SELECT p.* FROM news_db.group g " +
+        String queryPermission = "SELECT p.* FROM news_db.user_group g " +
                 "JOIN news_db.group_to_permission gp ON g.id=gp.group_id " +
                 "JOIN news_db.permission p ON p.id=gp.permission WHERE g.id=?";
 
@@ -98,10 +98,10 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void addGroup(Group group) throws SQLException {
-        String query = "INSERT INTO news_db.group (name) VALUES (?)";
+        String query = "INSERT INTO news_db.user_group (name) VALUES (?)";
 
         try (Connection connection = dbManager.getConnection();
-             PreparedStatement prStmt = connection.prepareStatement(query, new String[] {"id"})) {
+             PreparedStatement prStmt = connection.prepareStatement(query, new String[]{"id"})) {
             prStmt.setString(1, group.getName());
             prStmt.executeUpdate();
 
@@ -119,7 +119,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void editGroup(Group group) throws SQLException {
-        String query = "UPDATE news_db.group SET name=? WHERE (id=?)";
+        String query = "UPDATE news_db.user_group SET name=? WHERE (id=?)";
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmt = connection.prepareStatement(query)) {
@@ -138,7 +138,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void deleteGroup(int id) throws SQLException {
-        String deleteGroup = "DELETE FROM news_db.group WHERE (id=?)";
+        String deleteGroup = "DELETE FROM news_db.user_group WHERE (id=?)";
 
         try (Connection connection = dbManager.getConnection();
              PreparedStatement prStmtDeleteGroup = connection.prepareStatement(deleteGroup)) {

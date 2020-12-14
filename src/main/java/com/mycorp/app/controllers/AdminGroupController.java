@@ -3,13 +3,13 @@ package com.mycorp.app.controllers;
 import com.mycorp.app.Config;
 import com.mycorp.app.auth.Secured;
 import com.mycorp.app.group.Group;
+import com.mycorp.app.group.GroupDao;
 import com.mycorp.app.group.GroupService;
-import com.mycorp.app.group.GroupServiceImpl;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
 import com.mycorp.app.permission.Permission;
+import com.mycorp.app.permission.PermissionDao;
 import com.mycorp.app.permission.PermissionService;
-import com.mycorp.app.permission.PermissionServiceImpl;
 import org.apache.log4j.Logger;
 
 import javax.annotation.security.RolesAllowed;
@@ -33,14 +33,10 @@ import java.util.List;
 @Path("/admin/group")
 public class AdminGroupController {
     private final static Logger logger = Logger.getLogger(AdminGroupController.class);
-    private static GroupService groupService;
+    private static final GroupService groupService;
 
     static {
-        try {
-            groupService = new GroupServiceImpl();
-        } catch (SQLException e) {
-            logger.error(e);
-        }
+        groupService = new GroupDao();
     }
 
     @GET
@@ -61,15 +57,15 @@ public class AdminGroupController {
     @POST
     @Path("/add")
     @Produces(MediaType.TEXT_HTML)
-    public Response addGroup(@FormParam("permission[]") List <Integer> permissions,
-                           @FormParam("name") String name) throws SQLException {
+    public Response addGroup(@FormParam("permission[]") List<Integer> permissions,
+                             @FormParam("name") String name) throws SQLException {
 
         URI uri = UriBuilder.fromUri("admin/group/page/1").build();
 
         if (name == null || name.isEmpty()) return Response.seeOther(uri).build();
 
         List<Permission> permissionList = new ArrayList<>();
-        PermissionService ps = new PermissionServiceImpl();
+        PermissionService ps = new PermissionDao();
         for (int id : permissions) {
             permissionList.add(ps.fetchSinglePermission(id));
         }
@@ -109,7 +105,7 @@ public class AdminGroupController {
         if (name == null || name.isEmpty()) return Response.seeOther(uri).build();
 
         List<Permission> permissionList = new ArrayList<>();
-        PermissionService ps = new PermissionServiceImpl();
+        PermissionService ps = new PermissionDao();
         for (int idPerm : permissions) {
             permissionList.add(ps.fetchSinglePermission(idPerm));
         }

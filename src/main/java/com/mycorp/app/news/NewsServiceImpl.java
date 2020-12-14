@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public class NewsServiceImpl implements NewsService{
+public class NewsServiceImpl implements NewsService {
     private final static Logger logger = Logger.getLogger(NewsServiceImpl.class);
 
     public List<News> fetchNews() {

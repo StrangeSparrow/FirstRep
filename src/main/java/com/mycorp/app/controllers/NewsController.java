@@ -1,9 +1,10 @@
 package com.mycorp.app.controllers;
 
-import com.mycorp.app.*;
+import com.mycorp.app.Config;
+import com.mycorp.app.Constants;
 import com.mycorp.app.news.News;
+import com.mycorp.app.news.NewsDao;
 import com.mycorp.app.news.NewsService;
-import com.mycorp.app.news.NewsServiceDbImpl;
 import com.mycorp.app.news.NewsServiceImpl;
 import com.mycorp.app.paginator.Paginator;
 import com.mycorp.app.paginator.PaginatorBuilder;
@@ -28,14 +29,11 @@ import java.sql.SQLException;
 @Path("/news")
 public class NewsController {
     private final static Logger logger = Logger.getLogger(NewsController.class);
-    private static NewsService newsService = null;
+    private static NewsService newsService;
+
     static {
         if (Config.getInstance().getSource().equals("database")) {
-            try {
-                newsService = new NewsServiceDbImpl();
-            } catch (SQLException e) {
-                logger.error(e);
-            }
+            newsService = new NewsDao();
         } else {
             newsService = new NewsServiceImpl();
         }

@@ -1,8 +1,8 @@
 package com.mycorp.app.auth;
 
 import com.mycorp.app.Constants;
+import com.mycorp.app.user.UserDao;
 import com.mycorp.app.user.UserService;
-import com.mycorp.app.user.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,20 +13,15 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.sql.SQLException;
 
 @Secured
 @Path("/logout")
 public class Logout {
     private static final Logger logger = LoggerFactory.getLogger(Logout.class);
-    private static UserService userService = null;
+    private static final UserService userService;
 
     static {
-        try {
-            userService = new UserServiceImpl();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        userService = new UserDao();
     }
 
     @GET
